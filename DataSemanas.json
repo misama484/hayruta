@@ -1,0 +1,149 @@
+{
+"NSemanas":{
+  "1": 
+  [
+    {
+        "dia" : "Lunes",
+        "usuarios" : [{"Nombre" : "Nacho"},{"Nombre" : "Rafa"},{"Nombre" : "Miguel"}],
+        "Coches" : ["Nacho"]
+    },
+    {
+        "dia" : "Martes",
+        "usuarios" : [{"Nombre" : "Nacho"},{"Nombre" : "Rafa"},{"Nombre" : "Miguel"}, {"Nombre" : "Vega"}],
+        "Coches" : ["Rafa"]
+    },
+    {
+        "dia" : "Miercoles",
+        "usuarios" : [{"Nombre" : "Nacho"},{"Nombre" : "Rafa"},{"Nombre" : "Miguel"}, {"Nombre" : "Vega"}, {"Nombre" : "Gio"}],
+        "Coches" : ["Miguel"]
+    },
+    {
+        "dia" : "Jueves",
+        "usuarios" : [{"Nombre" : "Nacho"},{"Nombre" : "Rafa"},{"Nombre" : "Miguel"}, {"Nombre" : "Vega"}, {"Nombre" : "Gio"}, {"Nombre" : "Dreif"}],
+        "Coches" : ["Vega", "Gio"]
+    },
+    {
+        "dia" : "Viernes",        
+        "usuarios" : [{"Nombre" : "Miguel"}, {"Nombre" : "Vega"}, {"Nombre" : "Gio"}, {"Nombre" : "Dreif"}],
+        "Coches" : ["Dreif"]
+    }
+  ],
+      
+
+  "2": 
+    [
+      {
+        "dia" : "Lunes",
+        "usuarios" : [{"Nombre" : "Rafa"},{"Nombre" : "Rafa"},{"Nombre" : "Rafa"}],
+        "Coches" : ["Rafa"]
+      },
+      {
+        "dia" : "Martes",
+        "usuarios" : [{"Nombre" : "Nacho"},{"Nombre" : "Rafa"},{"Nombre" : "Miguel"}, {"Nombre" : "Vega"}],
+        "Coches" : ["Rafa"]
+      },
+      {
+        "dia" : "Miercoles",
+        "usuarios" : [{"Nombre" : "Nacho"},{"Nombre" : "Rafa"},{"Nombre" : "Miguel"}, {"Nombre" : "Vega"}, {"Nombre" : "Gio"}],
+        "Coches" : ["Miguel"]
+      },
+      {
+        "dia" : "Jueves",
+        "usuarios" : [{"Nombre" : "Nacho"},{"Nombre" : "Rafa"},{"Nombre" : "Miguel"}, {"Nombre" : "Vega"}, {"Nombre" : "Gio"}, {"Nombre" : "Dreif"}],
+        "Coches" : ["Vega", "Gio"]
+      },
+      {
+        "dia" : "Viernes",        
+        "usuarios" : [{"Nombre" : "Miguel"}, {"Nombre" : "Vega"}, {"Nombre" : "Gio"}, {"Nombre" : "Dreif"}],
+        "Coches" : ["Dreif"]
+      }
+    ],
+
+    "3":
+      [
+        {
+          "dia" : "Lunes",
+          "usuarios" : [],
+          "Coches" : []
+        },
+        {
+          "dia" : "Martes",
+          "usuarios" : [],
+          "Coches" : []
+        },
+        {
+          "dia" : "Miercoles",
+          "usuarios" : [],
+          "Coches" : []
+        },
+        {
+          "dia" : "Jueves",
+          "usuarios" : [],
+          "Coches" : []
+        },
+        {
+          "dia" : "Viernes",        
+          "usuarios" : [],
+          "Coches" : []
+        }
+      ],
+
+      "4":
+      [
+        {
+          "dia" : "Lunes",
+          "usuarios" : [],
+          "Coches" : []
+        },
+        {
+          "dia" : "Martes",
+          "usuarios" : [],
+          "Coches" : []
+        },
+        {
+          "dia" : "Miercoles",
+          "usuarios" : [],
+          "Coches" : []
+        },
+        {
+          "dia" : "Jueves",
+          "usuarios" : [],
+          "Coches" : []
+        },
+        {
+          "dia" : "Viernes",        
+          "usuarios" : [],
+          "Coches" : []
+        }
+      ],
+
+      "5":
+      [
+        {
+          "dia" : "Lunes",
+          "usuarios" : [],
+          "Coches" : []
+        },
+        {
+          "dia" : "Martes",
+          "usuarios" : [],
+          "Coches" : []
+        },
+        {
+          "dia" : "Miercoles",
+          "usuarios" : [],
+          "Coches" : []
+        },
+        {
+          "dia" : "Jueves",
+          "usuarios" : [],
+          "Coches" : []
+        },
+        {
+          "dia" : "Viernes",        
+          "usuarios" : [],
+          "Coches" : []
+        }
+      ]
+  }
+}
