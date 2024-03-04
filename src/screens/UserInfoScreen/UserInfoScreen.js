@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import {Button, List} from 'react-native-paper'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 //FIREBASE
 import { doc, getDoc, setDoc, getFirestore, collection, getDocs, query, where } from "firebase/firestore";
@@ -21,6 +22,15 @@ const UserInfoScreen = ({route}) => {
   const [ cars, setCars ] = useState([])
   const [menuVisible, setMenuVisible] = useState(false);
   const [users, setUsers] = useState([]);
+  const [correo, setCorreo] = useState('');
+  const [mes, setMes] = useState('');
+  const [mesNumber, setMesNumber] = useState(1);
+  const [usoMesRuta, setUsoMesRuta] = useState([]);
+  const [usoMesRutaCoche, setUsoMesRutaCoche] = useState([]);
+
+  
+
+
 
   const menuVisibleHandler = () => {
     setMenuVisible(!menuVisible);
@@ -53,27 +63,23 @@ const UserInfoScreen = ({route}) => {
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      //console.log(data.Nombre.nombre + "desde getUsers");
-      //TODO
-      results.push(data.Nombre.nombre);
-      
+      results.push({nombre: data.Nombre.nombre, email: data.email.email});      
     });
     return results;
   }
 
-  const fetchUsers = async () => {
-    const results = await getUsers();
-    setUsers(results);
-  }
+  
 
 
 
   const fetchName = async (email) => {
     const name = await getName(email);
     setNombre(name);
-   // console.log(name + " desde fetchName");
+    setCorreo(email);
   }
-  fetchName(email);
+  useEffect(() => {
+    fetchName(email);
+  }, []);
 
   //OBTENER DIAS DE USO DE RUTA
   const getDays = async (nombre) => {
@@ -104,6 +110,45 @@ const UserInfoScreen = ({route}) => {
   
   }
 
+  //CONSULTA LOS DIAS QUE HA USADO LA RUTA EN EL MES SELECCIONADO
+  const getMonthDays = async (nombre, mesNumber) => {
+    console.log("llamada desde getMonthDays - " + mesNumber + " - " + nombre);
+    const daysMoth = collection(db, 'Ruta');
+    const q = query(daysMoth, where('Mes', '==', mesNumber.toString()), where('Usuarios', 'array-contains', nombre));
+    const results = [];
+
+    const querySnapshot = await getDocs(q);
+    console.log("tamanyo de query " + querySnapshot.size);
+    querySnapshot.forEach((doc) => {
+      console.log(doc.data());
+      const dataMesNumber = doc.data();
+      results.push(dataMesNumber);
+      
+    });
+    console.log(results.length + "desde getMonthDays" + mesNumber)
+    return results;
+  }
+
+  const getMonthDaysCar = async (nombre, mesNumber) => {
+    console.log("llamada desde getMonthDays - " + mesNumber + " - " + nombre);
+    const daysMoth = collection(db, 'Ruta');
+    const q = query(daysMoth, where('Mes', '==', mesNumber.toString()), where('Coches', 'array-contains', nombre));
+    const results = [];
+
+    const querySnapshot = await getDocs(q);
+    console.log("tamanyo de query " + querySnapshot.size);
+    querySnapshot.forEach((doc) => {
+      console.log(doc.data());
+      const dataMesNumberCar = doc.data();
+      results.push(dataMesNumberCar);
+      
+    });
+    console.log(results.length + "desde getMonthDays" + mesNumber)
+    return results;
+  }
+
+
+
   //USEEFFECT QUE ACTUALIZA LOS DATOS DEPENDIENDO DEL NOMBRE
   useEffect(() => {
     const fetchDays = async () => {
@@ -114,35 +159,57 @@ const UserInfoScreen = ({route}) => {
       const coches = await getCars(nombre);
       setCars(coches);
     }
+    const fetchUsers = async () => {
+      const results = await getUsers();
+      setUsers(results);
+    }
+    const fetchMonthDays = async () => {
+      console.log("llamada desde fetchMothDays" + mesNumber);
+      const results = await getMonthDays(nombre, mesNumber);
+      setUsoMesRuta(results);
+    }
+    const fetchMonthDaysCar = async () => {
+      console.log("llamada desde fetchMothDays" + mesNumber);
+      const results = await getMonthDaysCar(nombre, mesNumber);
+      setUsoMesRutaCoche(results);
+    }
+
 
     fetchDays();
     fetchCars();
-  }, [nombre]);
+    fetchUsers();
+    fetchMonthDays();
+    fetchMonthDaysCar();
+  }, [nombre, mesNumber]);
 
 
   //MOSTRAR UN DESPLEGABLE DONDE PODER ELEGIR EL USUARIO DE LA RUTA PARA VER LA INFO
 
-  const MenuUsers = ({users = ["pepe", "juan"]}) => {
+  const MenuUsers = () => {    
+
     const [menuVisible, setMenuVisible] = useState(false);
     const menuVisibleHandler = () => {
       setMenuVisible(!menuVisible);
     }
     const closeMenu = () => setMenuVisible(false);
 
-    fetchUsers();
     return (
 
-      <List.Section>
+      <List.Section title='Seleccione Usuario'>
         <List.Accordion
-          title="Usuarios"
+          title={nombre}
           expanded={menuVisible}
           onPress={menuVisibleHandler}
+          left={props => <List.Icon {...props} icon="account" color='black'/>}
+          style = {{backgroundColor: '#6495ED', borderRadius: 10, borderWidth: 2, borderColor: 'black', height: 60, width: 'auto', minWidth: 170}}
         >
           {users.map((user, index) => (
             <List.Item
               key={index}
               title={user.nombre}
               onPress={() => {
+                setNombre(user.nombre);
+                setCorreo(user.email);
                 closeMenu();
               }}
             />
@@ -153,29 +220,84 @@ const UserInfoScreen = ({route}) => {
     )
   }
 
+  //MENU DESPLEGABLE PARA ELEGIR EL MES QUE SE QUIERE CONSULTAR
+  const MenuMeses = () => {
+
+    const [menuMesesVisible, setMenuMesesVisible] = useState(false);
+    const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    const menuMesesVisibleHandler = () => {
+      setMenuMesesVisible(!menuMesesVisible);
+    }
+    const closeMenuMeses = () => setMenuMesesVisible(false);
+
+    return (
+    <List.Section title='Seleccione Mes'>
+        <List.Accordion
+          title={meses}
+          expanded={menuMesesVisible}
+          onPress={menuMesesVisibleHandler}
+          left={props => <List.Icon {...props} icon="account" color='black'/>}
+          style = {{backgroundColor: '#6495ED', borderRadius: 10, borderWidth: 2, borderColor: 'black', height: 60, width: 'auto', minWidth: 170}}
+        >
+          {meses.map((mes, index) => (
+            <List.Item
+              key={index}
+              title={mes}
+              onPress={() => {
+                setMes(mes);
+                setMesNumber(index + 1);
+                closeMenuMeses();
+              }}
+            />
+          ))}
+        </List.Accordion>
+      </List.Section>
+    )
+  };
+
   return (
     <View style = {styles.container}>
-      <Text>Seleccione un usuario</Text>
-      <MenuUsers />
+      <View  style={{flexDirection: 'row', gap: 10}}>
+        <MenuUsers />
+        <MenuMeses />
+      </View>
       <View style = {styles.headerContainer}>
         <Text style = {styles.text}>Informacion del usuario</Text>
         <Text>Nombre: {nombre}</Text>
-        <Text>Email: {email}</Text>
+        <Text>Email: {correo}</Text>
       </View>
       <View style = {styles.listContainer}>
         <View style = {styles.list}>
-          <Text>Dias que ha usado ruta:</Text>
+          <Text>Dias que ha usado ruta: {data.length}</Text>
           {data.map((item, index) => (
             <Text key={index}>{item.Fecha}</Text>
           ))}
         </View>
         <View style = {styles.list}>
-          <Text>Dias que ha conducido:</Text>
+          <Text>Dias que ha conducido: {cars.length}</Text>
             {cars.map((coche, index) => (
               <Text key={index}>{coche.Fecha}</Text>
             ))}
+        </View>        
+      </View>
+      <View style = {styles.listContainer}>
+        <View style = {styles.list}>
+          <Text>Dias de {mes} que ha usado ruta: {usoMesRuta.length}</Text>
+            {usoMesRuta.map((uso, index) => (
+              <Text key={index}>{uso.Fecha}</Text>
+            ))}
+        </View>
+        <View style = {styles.list}>
+          <Text>Dias de {mes} que ha conducido: {usoMesRutaCoche.length}</Text>
+            {usoMesRutaCoche.map((uso, index) => (
+              <Text key={index}>{uso.Fecha}</Text>
+            ))}
         </View>
       </View>
+      <Text></Text>
+      <Text> mes: {mes}</Text>
+      <Text>Numero mes: {mesNumber}</Text>
+      
     </View>
   )
 }
@@ -199,7 +321,7 @@ styles = StyleSheet.create({
     borderRadius: 10,
     width: '70%',
     height: '20%',
-    marginTop: 20,
+    //marginTop: 20,
   },
 
   text: {
@@ -209,10 +331,12 @@ styles = StyleSheet.create({
 
   listContainer:{
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignSelf: 'center',
+    //justifyContent: 'center',
+    //alignSelf: 'center',
     gap: 20,
-    marginTop: 20,
+    marginTop: 10,
+    borderWidth: 2,
+    borderColor: 'black',
   },
 
   list: {

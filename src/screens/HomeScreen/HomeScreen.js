@@ -35,6 +35,7 @@ export default function HomeScreen({route, navigation}) {
   const [coches, setCoches] = useState([]);
   //const [email, setEmail] = useState('');
   const [nombre, setNombre] = useState('');
+  const [selectedMoth, setSelectedMonth] = useState('');
 
   //fecha actual
   const fecha = new Date();
@@ -144,6 +145,7 @@ export default function HomeScreen({route, navigation}) {
     //añadimos los datos a la bd
     await setDoc(docRef, {
       Fecha: fecha1,
+      Mes: selectedMoth,
       Coches: Coches,
       Usuarios: Usuarios
     }, {merge: true});
@@ -252,7 +254,7 @@ useEffect(() => {
           <Text>Nombre: {nombre} </Text>
         <View >
           <Text>Fecha actual: {fechaActual}</Text>
-          <Text>Fecha seleccionada: {currentDay ? currentDay :"Seleccione dia"}</Text>
+          <Text>Fecha seleccionada: {currentDay ? currentDay : fechaActual}</Text>
         </View>
       </View>
       {/*Navegar hasta userInfo */}
@@ -272,6 +274,7 @@ useEffect(() => {
        
         onDayPress={(day) => {
           setCurrentDay(day.day.toString() + "-" + day.month.toString() + "-" + day.year.toString());
+          setSelectedMonth(day.month.toString());
           //consulta({currentDay})
           //setViewConsulta(!viewConsulta);
         }}
@@ -323,14 +326,14 @@ useEffect(() => {
           <Text style = {{textAlignVertical: 'center'}}>Trabaja</Text>
             <Switch value={switchedWork} onValueChange={(value) => {
               onToggleSwitchWork();
-              console.log(value);
+              
             }}/>
         </View>
           <View style = {styles.optionContainer}>
             <Text style = {{textAlignVertical: 'center'}}>Coche</Text>
             <Switch value={switchedCar} onValueChange={(value) => {
               onToggleSwitchCar();
-              console.log(value);
+              
             }}/>
           </View>
           <View style = {styles.buttonContainer}>
