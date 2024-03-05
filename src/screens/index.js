@@ -3,3 +3,4 @@ export { default as RegistrationScreen } from './RegistrationScreen/Registration
 export { default as HomeScreen } from './HomeScreen/HomeScreen';
 export { default as UserInfoScreen } from './UserInfoScreen/UserInfoScreen';
 export { default as GasInfoScreen } from './GasInfoScreen/GasInfoScreen';
+export { default as MapScreen } from './MapScreen/MapScreen';

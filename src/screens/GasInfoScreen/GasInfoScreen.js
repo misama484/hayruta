@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Touchable, TouchableOpacity, Alert, ScrollView, SafeAreaView } from 'react-native';
-import { List } from 'react-native-paper';
+import { List, Button } from 'react-native-paper';
+import MapView from 'react-native-maps';
+import { useNavigation } from '@react-navigation/native';
 
 
 const GasInfoScreen = () => {
@@ -12,16 +14,21 @@ const GasInfoScreen = () => {
   const [municipio, setMunicipio] = useState('');
   const [idMunicipio, setIdMunicipio] = useState('');
   const [gasolineraName, setGasolineraName] = useState('');
+  const [ubicaciones, setUbicaciones] = useState([{latitud: 0, longitud: 0, rotulo: ''}]);
+  const [EESS, setEESS] = useState([{}]);
+
+  const navigation = useNavigation();
 
 
   const api = "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/";
   const provinciasApi = "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/Listados/Provincias/"
 
   const fetchGas = () => {
-    fetch(`https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/FiltroMunicipio/7003`)
+    fetch(`https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/FiltroMunicipio/${idMunicipio}`)
     .then(response => response.json())
     .then(gasolinera => setGasolineras(gasolinera.ListaEESSPrecio));
     console.log(gasolineras.length + " desde fetchGas");
+    console.log(ubicaciones);
     };
 
   const fetchProvincias = () => {
@@ -51,7 +58,9 @@ const GasInfoScreen = () => {
 
   useEffect(() => {
     fetchGas(idMunicipio);
+    
     console.log(gasolineras.length + " desde useEffect");
+    //console.log(ubicaciones.length + " ubicaciones desde useEffect");
   }, [idMunicipio])
  
 
@@ -157,6 +166,11 @@ const GasInfoScreen = () => {
                 onPress={() => {
                   closeMenu();                  
                   setGasolineraName(gasolinera.Rótulo)
+                  setUbicaciones({latitud: gasolinera.Latitud, longitud: gasolinera["Longitud (WGS84)"], rotulo: gasolinera.Rótulo});
+                  setEESS(gasolinera);
+                  console.log(gasolinera["Longitud (WGS84)"] + " desde ShowGasStations");
+                  console.log(ubicaciones.rotulo + " desde ShowGasStations latitud");
+
                 }}
                 
               />
@@ -185,15 +199,46 @@ const GasInfoScreen = () => {
     );
   }
 
+  const GasDetails = () => {
+    return (
+      <>
+      <View>
+        <Text>GasoleoA: {EESS["Precio Gasoleo A"]} Euros</Text>
+        <Text>Gasolina 95: {EESS["Precio Gasolina 95 E5"]} Euros</Text>
+      </View>
+      <View>
+        <Text>Nombre : {EESS.Rótulo}</Text>
+      </View>
+      </>
+    );
+  };
+
+  const OnMapButtonPress = () => {
+    navigation.navigate('MapScreen', {latitud: ubicaciones.latitud, longitud: ubicaciones.longitud, rotulo: ubicaciones.rotulo, gasolinera: EESS})
+  }
+
   return (
     <SafeAreaView>
       <Text style={styles.text}>Gas Info Screen</Text>
       <Text>{provinciaName} -- {idProvincia}</Text>
       <Text>{municipio} -- {idMunicipio}</Text>
+      <Text>Latitud: {ubicaciones.latitud}</Text>
+      <Text>Longitud: {ubicaciones.longitud}</Text>
       
       <ShowProvincias />
       <ShowPoblaciones />
       <ShowGasStations />
+      <GasDetails />
+
+      <TouchableOpacity
+          style={styles.button}
+          onPress={() => OnMapButtonPress()}>
+          <Text style={styles.buttonTitle}>Go to Map</Text>
+        </TouchableOpacity>
+
+      
+
+
     </SafeAreaView>
   );
 };
@@ -207,6 +252,16 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  button: {
+    backgroundColor: '#6495ED',
+    marginLeft: 30,
+    marginRight: 30,
+    marginTop: 20,
+    height: 48,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
 });
 
