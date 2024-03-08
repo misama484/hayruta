@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native'
 import {Button, List} from 'react-native-paper'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
@@ -27,7 +27,7 @@ const UserInfoScreen = ({route}) => {
   const [mesNumber, setMesNumber] = useState(1);
   const [usoMesRuta, setUsoMesRuta] = useState([]);
   const [usoMesRutaCoche, setUsoMesRutaCoche] = useState([]);
-
+  const [modal, setOpenModal] = useState(false);
   
 
 
@@ -255,17 +255,54 @@ const UserInfoScreen = ({route}) => {
     )
   };
 
+  //MODAL PARA EDITAR USUARIO
+  const EditUserModal = () => {
+    return (
+      <View>
+        {modal ? <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modal}
+          onRequestClose={() => {
+            setOpenModal(!modal);
+          }}
+          
+        >
+          <View>
+            <Text>Modal</Text>
+
+          </View>
+    
+        </Modal> : null}
+      </View>
+    )
+  }
+
+  const handleModal = () => {
+    setOpenModal(!modal);
+    EditUserModal();
+  };
+
+    //RETURN PRINCIPAL LA SCREEN
   return (
     <View style = {styles.container}>
+      {/* MENUS DESPLEGABLES */}
       <View  style={{flexDirection: 'row', gap: 10}}>
         <MenuUsers />
         <MenuMeses />
       </View>
+      {/* TARJETA INFO USUARIO */}
       <View style = {styles.headerContainer}>
         <Text style = {styles.text}>Informacion del usuario</Text>
         <Text>Nombre: {nombre}</Text>
         <Text>Email: {correo}</Text>
+        <View style = {{flexDirection: 'row', gap: 10}}>
+          <TouchableOpacity>
+            <Icon name="pencil" size={30} color="black" onPress={() => handleModal()}/>
+          </TouchableOpacity>
+        </View>
       </View>
+      {/* TARJETA USO TOTAL RUTA */}
       <View style = {styles.listContainer}>
         <View style = {styles.list}>
           <Text>Dias que ha usado ruta: {data.length}</Text>
@@ -280,21 +317,25 @@ const UserInfoScreen = ({route}) => {
             ))}
         </View>        
       </View>
-      <View style = {styles.listContainer}>
-        <View style = {styles.list}>
-          <Text>Dias de {mes} que ha usado ruta: {usoMesRuta.length}</Text>
-            {usoMesRuta.map((uso, index) => (
-              <Text key={index}>{uso.Fecha}</Text>
-            ))}
-        </View>
-        <View style = {styles.list}>
-          <Text>Dias de {mes} que ha conducido: {usoMesRutaCoche.length}</Text>
-            {usoMesRutaCoche.map((uso, index) => (
-              <Text key={index}>{uso.Fecha}</Text>
-            ))}
+      {/* TARJETA USO RUTA POR MES */}
+      <View style = {{flexDirection: "column", justifyContent:"flex-start", alignItems:"center"}}>        
+        <Text style = {{marginVertical: 10}}>Datos de {mes}</Text>       
+        <View style = {{flexDirection: "row", gap: 20}}>
+          <View style = {styles.list}>
+            <Text>Dias de {mes} que ha usado ruta: {usoMesRuta.length}</Text>
+              {usoMesRuta.map((uso, index) => (
+                <Text key={index}>{uso.Fecha}</Text>
+              ))}
+          </View>
+          
+          <View style = {styles.list}>          
+            <Text>Dias de {mes} que ha conducido: {usoMesRutaCoche.length}</Text>
+              {usoMesRutaCoche.map((uso, index) => (
+                <Text key={index}>{uso.Fecha}</Text>
+              ))}
+          </View>
         </View>
       </View>
-      <Text></Text>
       <Text> mes: {mes}</Text>
       <Text>Numero mes: {mesNumber}</Text>
       
@@ -308,7 +349,7 @@ styles = StyleSheet.create({
     flex: 1,
     //justifyContent: 'center',
     alignItems: 'center',
-    //backgroundColor: '#6495ED'
+    //backgroundColor: '#6495ED',
   },
 
   headerContainer: {
@@ -335,8 +376,6 @@ styles = StyleSheet.create({
     //alignSelf: 'center',
     gap: 20,
     marginTop: 10,
-    borderWidth: 2,
-    borderColor: 'black',
   },
 
   list: {
@@ -347,7 +386,7 @@ styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: '#6495ED',
     width: '40%',
-    height: '50%',
+    minHeight: 100,
   }
 })
 

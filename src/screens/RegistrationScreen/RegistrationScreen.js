@@ -62,6 +62,11 @@ export default function RegistrationScreen({ navigation }) {
       console.log(errorMessage);
     });
   }
+
+  const formatEmail = (email) => {
+    const emailFormatted = email.trim().toLowerCase();
+    setEmail(emailFormatted);
+  };
   
   return (
     <View style={styles.container}>
@@ -112,7 +117,7 @@ export default function RegistrationScreen({ navigation }) {
           style={styles.input}
           placeholder="Email"
           placeholderTextColor="#aaa"
-          onChangeText={(text) => setEmail(text)}
+          onChangeText={(text) => formatEmail(text)}
           value={email}
           underlineColorAndroid="transparent"
           autoCapitalize="none"

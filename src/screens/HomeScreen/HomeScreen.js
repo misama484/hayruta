@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, FlatList, Alert, Modal } from 'react-native'
+import { Text, View, StyleSheet, FlatList, Alert, Modal, ScrollView } from 'react-native'
 import { Calendar } from 'react-native-calendars' 
 import { Switch } from 'react-native-paper';
 import InfoSemana from '../../../components/InfoSemana';
@@ -163,7 +163,23 @@ useEffect(() => {
       const querySnapshot = await getDocs(q);
 
       if(querySnapshot.size == 0){
-        Alert.alert("Atencion", "No hay datos para este dia");
+        Alert.alert("Atencion", "No hay datos para este dia", [
+          {
+            text: 'Cancel',
+            //onPress: () => Alert.alert('Cancel Pressed'),
+            style: 'cancel',
+          },
+          {
+            text: 'Anyadir Usuario', 
+            onPress: () => {
+              //enviar a bd la fecha, el usuario y si coge coche
+              setOpenModal(!modal);
+              console.log(modal)
+              //addDoc({currentDay})
+            },
+            style: 'default'
+          }
+        ], {cancelable: false});
         setUsuarios([]);
         setCoches([]);
       }
@@ -202,7 +218,7 @@ useEffect(() => {
 
     return(
       <>
-      <Text style = {{alignSelf: "center", marginVertical: 10}}>{fecha}</Text>
+      <Text style = {{alignSelf: "center", marginVertical: 0}}>{fecha}</Text>
       <View style = {{flexDirection: "row", justifyContent: "space-around"}}>
             
             <View>
@@ -247,7 +263,7 @@ useEffect(() => {
   }
   
   return (
-    <SafeAreaView style ={styles.container}>
+    <View style ={styles.container} contentContainerStyle={{ alignItems: 'center'}}>
      <View style = {styles.header}>        
         <View style = {styles.bloqueFecha}>
           <Text style = {{textDecorationLine: "underline"}}>Email: {email} </Text>
@@ -258,6 +274,7 @@ useEffect(() => {
         </View>
       </View>
       {/*Navegar hasta userInfo */}
+      <View style = {{flexDirection: 'column', justifyContent: 'space-around', gap: 10}}>
       <Button
       mode='contained'
       style = {{backgroundColor: '#6495ED', marginTop: 10}}
@@ -265,9 +282,16 @@ useEffect(() => {
         handleUserInfo();
       }}
       >Userinfo</Button>
+      <Button
+      mode='contained'
+      style = {{backgroundColor: '#6495ED', marginTop: 10}}
+      onPress={() => {
+        navigation.navigate('GasInfoScreen');
+      }}
+      >GasInfoScreen</Button>
+      </View>
+
     </View>
-
-
       <Calendar
         style={styles.calendar}
         current={date}
@@ -370,7 +394,7 @@ useEffect(() => {
 
     </View>
 
-    </SafeAreaView>
+    </View>
   )
 }
 
@@ -379,12 +403,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center'
+    
   },
   header:{ 
+    flexDirection: "row",
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 10,
     marginBottom: 20,
+    gap: 20,
   },
   bloqueFecha: {
     flexDirection: 'column',
@@ -411,7 +438,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 20,
     width: 400,
-    height: 350,
+    height: 400,
+    minHeight: 350,
+
     borderRadius: 20,
     justifyContent: 'center',
     backgroundColor: '#6495ED',

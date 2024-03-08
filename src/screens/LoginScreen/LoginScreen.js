@@ -49,6 +49,12 @@ export default function LoginScreen({ navigation }) {
   const OnGasInfoPress = () => {
     navigation.navigate('GasInfoScreen')
   };
+  const formatEmail = (email) => {
+    const emailFormatted = email.trim().toLowerCase();
+    console.log(emailFormatted);
+    setEmail(emailFormatted);
+    console.log(email + "desde formatEmail: ");
+  };
   
   const onLoginPress = () => {
     signInWithEmailAndPassword(auth, email, password, nombreUser)
@@ -79,7 +85,7 @@ export default function LoginScreen({ navigation }) {
           style={styles.input}
           placeholder="E-mail"
           placeholderTextColor="#aaa"
-          onChangeText={(text) => setEmail(text)}
+          onChangeText={(text) => formatEmail(text)}
           value={email}
           underlineColorAndroid="transparent"
           autoCapitalize="none"

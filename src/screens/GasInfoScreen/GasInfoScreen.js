@@ -181,20 +181,39 @@ const GasInfoScreen = () => {
     );
   };
 
-  const ShowMunicipio = () => {
+  const ShowEESSList = () => {
+
+    if (gasolineras.length === 0) {
+      return (
+        <View style = {{maxHeight: 450, minHeight: 100, marginTop: 50, borderWidth: 2, borderColor: "black", borderRadius: 10, backgroundColor: "#6495ED", justifyContent: "center", alignItems: "center"}}>
+          <Text style = {{fontSize: 20}}>No hay gasolineras</Text>
+        </View>
+      );
+    }
+
     return (
       <FlatList
-        style = {{height: 250, }}
-        data = {poblaciones}
+        style = {{maxHeight: 450, minHeight: 100, marginTop: 50, marginHorizontal: 2, borderWidth: 2, borderColor: "black", borderRadius: 10, backgroundColor: "#6495ED"}}
+        data = {gasolineras}
         renderItem = {({item}) => (
-          <TouchableOpacity
-            onPress={() =>  setMunicipio(item.Municipio)}>
-            <Text style = {{padding: 10, fontSize: 18, backgroundColor: "#6495ED", borderWidth: 1, borderColor: "black", borderRadius: 10, margin: 5,}}>
-              {item.Municipio}
-            </Text>
-          </TouchableOpacity>
+          <View style = {{padding: 10, fontSize: 18, backgroundColor: "lightgray", borderWidth: 1, borderColor: "black", borderRadius: 10, margin: 5, flexDirection: "row", justifyContent:"space-around", alignItems: "center"}}>
+            <View>
+              <Text >
+                {item.Rótulo}
+              </Text>
+              <Text>GasoleoA: {item["Precio Gasoleo A"]} Euros</Text>
+              <Text>Gasolina 95: {item["Precio Gasolina 95 E5"]} Euros</Text>
+            </View>
+            <View>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => OnMapButtonPress(item)}>
+                <Text style={styles.buttonTitle}>Go to Map</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         )}
-        keyExtractor = {item => item.IDPovincia}
+        keyExtractor = {item => item.IDEESS}
       />
     );
   }
@@ -213,28 +232,17 @@ const GasInfoScreen = () => {
     );
   };
 
-  const OnMapButtonPress = () => {
-    navigation.navigate('MapScreen', {latitud: ubicaciones.latitud, longitud: ubicaciones.longitud, rotulo: ubicaciones.rotulo, gasolinera: EESS})
+  const OnMapButtonPress = (gasolinera) => {
+    setEESS(gasolinera);
+    navigation.navigate('MapScreen', {gasolinera: gasolinera})
   }
 
   return (
     <SafeAreaView>
-      <Text style={styles.text}>Gas Info Screen</Text>
-      <Text>{provinciaName} -- {idProvincia}</Text>
-      <Text>{municipio} -- {idMunicipio}</Text>
-      <Text>Latitud: {ubicaciones.latitud}</Text>
-      <Text>Longitud: {ubicaciones.longitud}</Text>
-      
       <ShowProvincias />
       <ShowPoblaciones />
-      <ShowGasStations />
-      <GasDetails />
+      <ShowEESSList />
 
-      <TouchableOpacity
-          style={styles.button}
-          onPress={() => OnMapButtonPress()}>
-          <Text style={styles.buttonTitle}>Go to Map</Text>
-        </TouchableOpacity>
 
       
 
@@ -254,11 +262,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   button: {
-    backgroundColor: '#6495ED',
+    backgroundColor: 'darkred',
+    borderWidth: 1,
+    borderColor: 'black',
     marginLeft: 30,
     marginRight: 30,
-    marginTop: 20,
-    height: 48,
+    //marginTop: 20,
+    height: 40,
+    width: 100,
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center'

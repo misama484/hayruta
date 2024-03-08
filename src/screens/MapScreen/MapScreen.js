@@ -4,16 +4,21 @@ import MapView, { Marker, Polyline} from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 
 const MapScreen = ({route}) => {
-  const { latitud } = route.params;
-  const { longitud } = route.params;
-  const { rotulo } = route.params;
+
   const { gasolinera } = route.params;
+  //cambiar la , de latitud y longitud a punto para convertir en float
+  const latitud = gasolinera.Latitud.replace(",", ".");
+  const longitud = gasolinera["Longitud (WGS84)"].replace(",", ".");
+  const rotulo = gasolinera["Rótulo"];
+
 
   //coordenadas de origen que se mostraran al abrir el mapa (coordenadas de la base)
-  /*const [origin, setOrigin] = useState({
-    latitude: 39.707220, 
-    longitude: -0.569472
-  });*/
+  /*
+  const [origin, setOrigin] = useState({
+    latitude: 39.141611, 
+    longitude: -0.439472
+  });
+  */
   const [origin, setOrigin] = useState({
     latitude: parseFloat(latitud), 
     longitude: parseFloat(longitud)
@@ -36,8 +41,6 @@ const MapScreen = ({route}) => {
     //Para poder anyadir markers y polylines, necesitamos que MapView tenga etiqueta de cierre
     <View style = {styles.container}>
       <Text>Nombre: {rotulo}</Text>
-      <Text>Latitud: {latitud}</Text>
-      <Text>Longitud: {longitud}</Text>
       <Text>GasoleoA: {gasolinera["Precio Gasoleo A"]} Euros</Text>
       <Text>Gasolina 95: {gasolinera["Precio Gasolina 95 E5"]} Euros</Text>
       <MapView
@@ -57,7 +60,7 @@ const MapScreen = ({route}) => {
         <MapViewDirections
           origin={origin}
           destination={destination}
-          apikey={""}
+          apikey={"AIzaSyDxbPcazMlMBcCsRs6Zd71K3A819j4LLDk"}
           />
 
       </MapView>  
