@@ -219,10 +219,10 @@ useEffect(() => {
     return(
       <>
       <Text style = {{alignSelf: "center", marginVertical: 0}}>{fecha}</Text>
-      <View style = {{flexDirection: "row", justifyContent: "space-around"}}>
+      <View style = {{flexDirection: "row", justifyContent: "space-around", backgroundColor: "#6495ED", borderRadius: 20}}>
             
             <View>
-              <Text style= {{textDecorationLine: "underline line"}}>Usuarios</Text>
+              <Text style= {{textDecorationLine: "underline line", fontSize: 18}}>Usuarios</Text>
               <FlatList
               data = {usuarios}
               
@@ -234,7 +234,7 @@ useEffect(() => {
             </View>
 
             <View>
-              <Text style= {{textDecorationLine: "underline line"}}>Coches</Text>
+              <Text style= {{textDecorationLine: "underline line", fontSize: 18}}>Coches</Text>
               <FlatList
               data = {coches}
               renderItem = {({item}) => (
@@ -281,14 +281,14 @@ useEffect(() => {
       onPress={() => {
         handleUserInfo();
       }}
-      >Userinfo</Button>
+      >Informacion Usuario</Button>
       <Button
       mode='contained'
       style = {{backgroundColor: '#6495ED', marginTop: 10}}
       onPress={() => {
         navigation.navigate('GasInfoScreen');
       }}
-      >GasInfoScreen</Button>
+      >Precios combustible</Button>
       </View>
 
     </View>
@@ -412,6 +412,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 20,
     gap: 20,
+    
   },
   bloqueFecha: {
     flexDirection: 'column',
@@ -420,7 +421,8 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 10,
     backgroundColor: '#6495ED',
-    borderRadius: 30,
+    borderRadius: 30, 
+    elevation: 5,
   },
   input: {
     height: 48,
@@ -468,6 +470,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     backgroundColor: '#6495ED',
     borderRadius: 30,
+    elevation: 5,
   },
 
 

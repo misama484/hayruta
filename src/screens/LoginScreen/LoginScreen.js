@@ -17,6 +17,7 @@ export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [modal, setModal] = useState(false);
 
 
   const app = initializeApp(firebaseConfig);
@@ -116,6 +117,8 @@ export default function LoginScreen({ navigation }) {
           <Text style={styles.footerText}>Don't have an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Sign up</Text></Text>
         </View>
       </KeyboardAwareScrollView>
+
+     
     </View>
   )
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native'
-import {Button, List} from 'react-native-paper'
+import {Button, List, TextInput} from 'react-native-paper'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 //FIREBASE
@@ -258,34 +258,76 @@ const UserInfoScreen = ({route}) => {
   //MODAL PARA EDITAR USUARIO
   const EditUserModal = () => {
     return (
-      <View>
-        {modal ? <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modal}
-          onRequestClose={() => {
-            setOpenModal(!modal);
-          }}
-          
-        >
-          <View>
-            <Text>Modal</Text>
 
-          </View>
-    
-        </Modal> : null}
-      </View>
+      <Modal 
+      style = {styles.modalContainer}
+      animationType='slide'
+      visible= {modal}
+      onRequestClose={""}
+      transparent={true}
+
+      >
+        <Text>Modal</Text>
+      </Modal>
+
     )
   }
 
   const handleModal = () => {
     setOpenModal(!modal);
-    EditUserModal();
+    //EditUserModal();
   };
 
     //RETURN PRINCIPAL LA SCREEN
   return (
+
     <View style = {styles.container}>
+      {/* MODAL QUE GESTIONA LA EDICION DE DATOS DEL USUARIO */}
+      {modal ? <Modal
+        animationType='slide'
+        transparent = {true}
+        visible= {modal}
+        onRequestClose={() => setOpenModal(!modal)}
+
+      >
+        <View style = {styles.modalContainer}>
+          <Text
+            style = {{margin: 30, fontSize: 15, fontWeight: 'bold', borderWidth: 1, borderColor: 'black', borderRadius: 10, padding: 10,}}
+          >
+            Editar datos de usuario</Text>
+          <TextInput 
+            placeholder="Nombre"
+            style={styles.input}
+          />
+          <TextInput 
+            placeholder="Apellido"
+            style={styles.input}
+          />
+          <TextInput 
+            placeholder="Nombre de usuario"
+            style={styles.input}
+          />
+          <TextInput 
+            placeholder="Poblacion"
+            style={styles.input}
+          />
+          <TextInput 
+            placeholder="Email"
+            style={styles.input}
+          />      
+          <View style = {styles.buttonModalContainer}>
+            <Button
+            style = {styles.button}
+              onPress={() => handleModal()}
+            >Cerrar</Button>
+            <Button
+            style = {styles.button}
+              title="Guardar cambios"
+            >Guardar</Button>
+          </View>
+        </View>
+      </Modal> : null}
+
       {/* MENUS DESPLEGABLES */}
       <View  style={{flexDirection: 'row', gap: 10}}>
         <MenuUsers />
@@ -297,9 +339,14 @@ const UserInfoScreen = ({route}) => {
         <Text>Nombre: {nombre}</Text>
         <Text>Email: {correo}</Text>
         <View style = {{flexDirection: 'row', gap: 10}}>
-          <TouchableOpacity>
-            <Icon name="pencil" size={30} color="black" onPress={() => handleModal()}/>
+          <TouchableOpacity 
+          style = {{flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 10, marginTop: 10}}
+          onPress={() => handleModal()}
+          >
+            <Icon name="pencil" size={30} color="black"/>
+            <Text>Editar Datos</Text>
           </TouchableOpacity>
+          
         </View>
       </View>
       {/* TARJETA USO TOTAL RUTA */}
@@ -319,7 +366,7 @@ const UserInfoScreen = ({route}) => {
       </View>
       {/* TARJETA USO RUTA POR MES */}
       <View style = {{flexDirection: "column", justifyContent:"flex-start", alignItems:"center"}}>        
-        <Text style = {{marginVertical: 10}}>Datos de {mes}</Text>       
+        <Text style = {{marginVertical: 10}}>Datos de: {mes ? mes : "Elegir mes"}</Text>       
         <View style = {{flexDirection: "row", gap: 20}}>
           <View style = {styles.list}>
             <Text>Dias de {mes} que ha usado ruta: {usoMesRuta.length}</Text>
@@ -336,10 +383,12 @@ const UserInfoScreen = ({route}) => {
           </View>
         </View>
       </View>
-      <Text> mes: {mes}</Text>
-      <Text>Numero mes: {mesNumber}</Text>
       
+      
+
+
     </View>
+    
   )
 }
 
@@ -387,7 +436,56 @@ styles = StyleSheet.create({
     backgroundColor: '#6495ED',
     width: '40%',
     minHeight: 100,
-  }
+  },
+
+  modalContainer: {
+    //marginTop: 90,
+    width: "90%",
+    height: "70%",
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',    
+    padding: 20,
+    marginTop: 20,
+    backgroundColor: '#6495ED',
+    borderRadius: 30,
+    elevation: 5,
+  },
+
+  input: {
+    //flex: 1,
+    height: 40,
+    width: 300,
+    borderRadius: 5,
+    alignSelf: 'center',
+    overflow: 'hidden',
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: "#6495ED",
+    marginTop: 10,
+    marginBottom: 10,
+    paddingLeft: 16
+  },
+
+  buttonModalContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 10,
+  }, 
+  button:{
+    backgroundColor: '#6495ED',
+    marginLeft: 30,
+    marginRight: 30,
+    marginTop: 20,
+    //height: 48,
+    width: 100,
+    borderRadius: 20,
+    borderWidth: 1, 
+    borderColor: 'black',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
 })
 
 export default UserInfoScreen
