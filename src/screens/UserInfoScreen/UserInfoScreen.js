@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native'
 import {Button, List, TextInput} from 'react-native-paper'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import EditUserInfo from '../../../components/EditUserInfo.js' 
 
 //FIREBASE
 import { doc, getDoc, setDoc, getFirestore, collection, getDocs, query, where } from "firebase/firestore";
@@ -28,7 +29,8 @@ const UserInfoScreen = ({route}) => {
   const [usoMesRuta, setUsoMesRuta] = useState([]);
   const [usoMesRutaCoche, setUsoMesRutaCoche] = useState([]);
   const [modal, setOpenModal] = useState(false);
-  
+  //estado que controlara cuando se han actualizado los datos de usuario deade EditUserInfo
+  const [isUserDataUpdated, setIsUserDataUpdated] = useState(false);
 
 
 
@@ -42,7 +44,7 @@ const UserInfoScreen = ({route}) => {
   //OBTENER NOMBRE DE USUARIO (todo esto deberia ir en un archivo aparte, pero por ahora lo dejo aqui para pruebas)
   const getName = async (email) => {
     const users = collection(db, 'Users');
-    const q = query(users, where('email', '==', {email}))
+    const q = query(users, where('email', '==', email))
     let userName = '';
     
     //Obtenemos los datos
@@ -50,7 +52,7 @@ const UserInfoScreen = ({route}) => {
     querySnapshot.forEach((doc) => {
       const data = doc.data();
       //extraemos el nombre de la bd y lo pasamos como return
-      userName = data.Nombre.nombre      
+      userName = data.Nombre      
     });
     return userName;
   }
@@ -63,7 +65,7 @@ const UserInfoScreen = ({route}) => {
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      results.push({nombre: data.Nombre.nombre, email: data.email.email});      
+      results.push({nombre: data.Nombre, email: data.email});      
     });
     return results;
   }
@@ -79,7 +81,17 @@ const UserInfoScreen = ({route}) => {
   }
   useEffect(() => {
     fetchName(email);
-  }, []);
+  }, [isUserDataUpdated]);
+
+  //Llama a getName y getUsers para obtener los datos de usuario y la lista de usuarios cada vez que cambien deade EditUserInfo
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const name = await getName(email);
+      const users = await getUsers();
+      setUserData({name, users});
+    }
+    fetchUserData();
+  }, [isUserDataUpdated]);
 
   //OBTENER DIAS DE USO DE RUTA
   const getDays = async (nombre) => {
@@ -290,42 +302,7 @@ const UserInfoScreen = ({route}) => {
         onRequestClose={() => setOpenModal(!modal)}
 
       >
-        <View style = {styles.modalContainer}>
-          <Text
-            style = {{margin: 30, fontSize: 15, fontWeight: 'bold', borderWidth: 1, borderColor: 'black', borderRadius: 10, padding: 10,}}
-          >
-            Editar datos de usuario</Text>
-          <TextInput 
-            placeholder="Nombre"
-            style={styles.input}
-          />
-          <TextInput 
-            placeholder="Apellido"
-            style={styles.input}
-          />
-          <TextInput 
-            placeholder="Nombre de usuario"
-            style={styles.input}
-          />
-          <TextInput 
-            placeholder="Poblacion"
-            style={styles.input}
-          />
-          <TextInput 
-            placeholder="Email"
-            style={styles.input}
-          />      
-          <View style = {styles.buttonModalContainer}>
-            <Button
-            style = {styles.button}
-              onPress={() => handleModal()}
-            >Cerrar</Button>
-            <Button
-            style = {styles.button}
-              title="Guardar cambios"
-            >Guardar</Button>
-          </View>
-        </View>
+        <EditUserInfo modal={modal} setOpenModal = {setOpenModal} correo={correo} setIsUserDataUpdated={setIsUserDataUpdated}/>
       </Modal> : null}
 
       {/* MENUS DESPLEGABLES */}
@@ -340,6 +317,8 @@ const UserInfoScreen = ({route}) => {
         <Text>Email: {correo}</Text>
         <View style = {{flexDirection: 'row', gap: 10}}>
           <TouchableOpacity 
+          //dependiendo si es el usuario logueado o no, se habilita o no el boton de editar informacion
+          disabled = {email == correo ? false : true}
           style = {{flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 10, marginTop: 10}}
           onPress={() => handleModal()}
           >

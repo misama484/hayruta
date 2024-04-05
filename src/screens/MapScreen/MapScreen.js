@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import MapView, { Marker, Polyline} from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
+import { Button } from 'react-native-paper';
+import { Linking } from 'react-native';
+import * as Location from 'expo-location';
+
 
 const MapScreen = ({route}) => {
 
@@ -35,14 +39,40 @@ const MapScreen = ({route}) => {
     longitude: -0.559892
   }
 
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        console.error('Permission to access location was denied');
+        return;
+      }
   
+      let location = await Location.getCurrentPositionAsync({});
+      setOrigin({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude
+      });
+    })();
+  }, []);
+
 
   return (
     //Para poder anyadir markers y polylines, necesitamos que MapView tenga etiqueta de cierre
     <View style = {styles.container}>
-      <Text>Nombre: {rotulo}</Text>
-      <Text>GasoleoA: {gasolinera["Precio Gasoleo A"]} Euros</Text>
-      <Text>Gasolina 95: {gasolinera["Precio Gasolina 95 E5"]} Euros</Text>
+      <View style = {styles.infoContainer}>
+        <Text>Nombre: {rotulo}</Text>
+        <Text>GasoleoA: {gasolinera["Precio Gasoleo A"]} Euros</Text>
+        <Text>Gasolina 95: {gasolinera["Precio Gasolina 95 E5"]} Euros</Text>
+        {/*en el onPress, abre la app maps y pone como destino las coordenadas de la gasolinera, en este caso Marines */}
+        <Button
+          mode="contained"
+          onPress={() => {
+            const url = `http://maps.google.com/maps?saddr=${origin.latitude}, ${origin.longitude}&daddr=${Marines.latitude},${Marines.longitude}`;
+            Linking.openURL(url);
+          }}
+          style={{marginTop: 10}}
+        >Como llegar</Button>
+      </View>
       <MapView
         style={styles.map}
         initialRegion={{
@@ -62,6 +92,18 @@ const MapScreen = ({route}) => {
           destination={destination}
           apikey={"AIzaSyDxbPcazMlMBcCsRs6Zd71K3A819j4LLDk"}
           />
+        {/*
+        <MapView.Marker coordinate={origin} />
+        <MapView.Marker coordinate={destination} />
+         */}
+
+        <MapViewDirections
+          origin={origin}
+          destination={destination}
+          apikey={"AIzaSyDxbPcazMlMBcCsRs6Zd71K3A819j4LLDk"}
+          strokeWidth={3}
+          strokeColor="hotpink"
+        />
 
       </MapView>  
     </View>
@@ -78,6 +120,16 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '50%',
     margin: 20,
+  },
+  infoContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+    backgroundColor: '#6495ED',
+    borderRadius: 30, 
+    elevation: 5,
   }
 }) 
 

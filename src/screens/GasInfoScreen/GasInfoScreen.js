@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Touchable, TouchableOpacity, Alert, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Touchable, TouchableOpacity, Alert, ScrollView, SafeAreaView, TextInput } from 'react-native';
 import { List, Button } from 'react-native-paper';
 import MapView from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
@@ -16,6 +16,8 @@ const GasInfoScreen = () => {
   const [gasolineraName, setGasolineraName] = useState('');
   const [ubicaciones, setUbicaciones] = useState([{latitud: 0, longitud: 0, rotulo: ''}]);
   const [EESS, setEESS] = useState([{}]);
+  //estado del texto para el filtrado de provincias
+  
 
   const navigation = useNavigation();
 
@@ -64,17 +66,50 @@ const GasInfoScreen = () => {
   }, [idMunicipio])
  
 
+  //METODO PARA MOSTRAR LAS PROVINCIAS FILTRANDO POR TEXTO ESCRITO
+  //Separamos el etxtInput, ya que al actualizar estado, puerde el foco porque vuelve a renderizarse
+
+  const SearchInput = ({onSearch}) =>{
+
+    const [searchText, setSearchText] = useState('');
+
+    useEffect (() => {
+      onSearch(searchText);
+    }, [searchText]);
+
+    return (
+      <TextInput
+        style={styles.textInputProvincia}
+        onChangeText={text => setSearchText(text)}
+        value={searchText}
+        placeholder='Buscar' 
+      />
+    );
+  };
+
   const ShowProvincias = () => {
-    
     const [visible, setVisible] = useState(false);
     const visibleHandler = () => {
       setVisible(!visible);
     }
     const closeMenu = () => setVisible(false);
-
+  
+    /*const filteredProvincias = provincias.filter(provincia =>
+      provincia.Provincia.toUpperCase().includes(searchText.toUpperCase())
+    );*/
+    const [filteredProvincias, setFilteredProvincias] = useState(provincias);
+    const handleSearch = (searchText) => {
+      setFilteredProvincias(
+        provincias.filter(provincia =>
+          provincia.Provincia.toUpperCase().includes(searchText.toUpperCase())
+        )
+      );
+    };
+  
     return (
       <List.Section title='Seleccione provincia'>
         <ScrollView style={{ maxHeight: '76%' }}>
+          <SearchInput onSearch = {handleSearch}/>
           <List.Accordion
             title={provinciaName}
             expanded={visible}
@@ -82,25 +117,24 @@ const GasInfoScreen = () => {
             left={props => <List.Icon {...props} icon="account" color='black'/>}
             style = {{backgroundColor: '#6495ED', borderRadius: 10, borderWidth: 2, borderColor: 'black', height: 60, width: 'auto', minWidth: 250}}
           >
-            {provincias.map((provincia, index) => (
+            {filteredProvincias.map((provincia, index) => (
               <List.Item
-              style = {{padding: 10, fontSize: 18, backgroundColor: "#6495ED", borderWidth: 1, borderColor: "black", borderRadius: 10, margin: 5,}}
+                style = {{padding: 10, fontSize: 18, backgroundColor: "#6495ED", borderWidth: 1, borderColor: "black", borderRadius: 10, margin: 5,}}
                 key={index}
                 title={provincia.Provincia}
                 onPress={() => {
                   closeMenu();
                   setProvinciaName(provincia.Provincia)
                   setIdProvincia(provincia.IDPovincia)
-                  
                 }}
               />
             ))}
           </List.Accordion>
         </ScrollView>
       </List.Section>
-      
     );
   };
+
 
   const ShowPoblaciones = () => {    
     
@@ -110,9 +144,23 @@ const GasInfoScreen = () => {
     }
     const closeMenu = () => setVisible(false);
 
+    const [filteredPoblaciones, setFilteredPoblaciones] = useState(poblaciones);
+
+    
+    const handleSearchPoblacion = (searchText) => {
+      const searchTextToLowerCase = searchText.toLowerCase();
+      const searchTextModified = searchTextToLowerCase.charAt(0).toUpperCase() + searchTextToLowerCase.slice(1);
+      setFilteredPoblaciones(
+        poblaciones.filter(poblacion =>
+          poblacion.Municipio.includes(searchTextModified)
+        )
+      );
+    };
+
     return (
-      <List.Section title='Seleccione poblacion'>
+      <List.Section title='Seleccione poblacion' style = {{marginVertical: 0}}>
         <ScrollView style={{ maxHeight: '76%' }}>
+          <SearchInput onSearch={handleSearchPoblacion}/>
           <List.Accordion
             title={municipio}
             expanded={visible}
@@ -120,7 +168,7 @@ const GasInfoScreen = () => {
             left={props => <List.Icon {...props} icon="account" color='black'/>}
             style = {{backgroundColor: '#6495ED', borderRadius: 10, borderWidth: 2, borderColor: 'black', height: 60, width: 'auto', minWidth: 250}}
           >
-            {poblaciones.map((poblacion, index) => (
+            {filteredPoblaciones.map((poblacion, index) => (
               <List.Item
                 style = {{padding: 10, fontSize: 18, backgroundColor: "#6495ED", borderWidth: 1, borderColor: "black", borderRadius: 10, margin: 5,}}
                 key={index}
@@ -149,7 +197,7 @@ const GasInfoScreen = () => {
 
     return (
       <List.Section title='Seleccione Gasolinera'>
-        <ScrollView style={{ maxHeight: '59%' }}>
+        <ScrollView style={{ maxHeight: '59%'}}>
           {/*OJO CON LA TILDE DE ROTULO, SIN ELLA NO MUETSRA NADA */}
           <List.Accordion
             title={gasolineraName}
@@ -193,11 +241,12 @@ const GasInfoScreen = () => {
 
     return (
       <FlatList
-        style = {{maxHeight: 450, minHeight: 100, marginTop: 50, marginHorizontal: 2, borderWidth: 2, borderColor: "black", borderRadius: 10, backgroundColor: "#6495ED"}}
+        style = {{maxHeight: 360, minHeight: 100, marginTop: 30, marginBottom: 20, marginHorizontal: 2, borderWidth: 2, borderColor: "black", borderRadius: 10, backgroundColor: "#6495ED"}}
         data = {gasolineras}
         renderItem = {({item}) => (
           <View style = {{padding: 10, fontSize: 18, backgroundColor: "lightgray", borderWidth: 1, borderColor: "black", borderRadius: 10, margin: 5, flexDirection: "row", justifyContent:"space-around", alignItems: "center"}}>
             <View>
+              
               <Text >
                 {item.Rótulo}
               </Text>
@@ -242,11 +291,6 @@ const GasInfoScreen = () => {
       <ShowProvincias />
       <ShowPoblaciones />
       <ShowEESSList />
-
-
-      
-
-
     </SafeAreaView>
   );
 };
@@ -273,6 +317,15 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  textInputProvincia: {
+    height: 40,
+    borderColor: 'black',
+    borderWidth: 2,
+    marginVertical: 10,
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: "#6495ED",
   },
 });
 

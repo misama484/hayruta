@@ -31,17 +31,13 @@ export default function RegistrationScreen({ navigation }) {
 
   //enviamos datos a bd para almacenar nuevo usuario
   const addUserBd = async(apellido, nombre, userName, poblacion, email)=>{
-    //obtener length de Users para colocar id de ultimo usuario
-    //const collectionName = db.collection('Users');
-    //const totalUsuarios = await collectionName.count().get();
-    //const idUsuario = totalUsuarios + 1;
+    
     const newUser = await addDoc(collection(db, "Users"), {
-      "Apellido": {apellido},
-      "Nombre": {nombre},
-      "Nombre_Usuario": {userName},
-      "email": {email},
-      "Poblacion": {poblacion},
-      "id": "2"
+      "Apellido": apellido,
+      "Nombre": nombre,
+      "Nombre_Usuario": userName,
+      "email": email,
+      "Poblacion": poblacion,
     });
     console.log("newUser" + newUser)
   }
@@ -54,7 +50,7 @@ export default function RegistrationScreen({ navigation }) {
       console.log('User account created & signed in!');      
       //const user = userCredential.user;
       //console.log(user);
-      navigation.navigate('LoginScreen');
+      navigation.navigate('Login');
     })
     .catch((error) => {
       const errorCode = error.code;

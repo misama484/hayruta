@@ -21,10 +21,6 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 export default function HomeScreen({route, navigation}) {
-
-
-
-
   const [currentDay, setCurrentDay] = useState('');
   const [date, setDate] = useState(new Date());
   const [ switchedWork, setSwitchedWork ] = useState(false);
@@ -45,7 +41,7 @@ export default function HomeScreen({route, navigation}) {
   //funcion para obtener nombre de usuario
   const getName = async (email) => {
     const users = collection(db, 'Users');
-    const q = query(users, where('email', '==', {email}))
+    const q = query(users, where('email', '==', email))
     let userName = '';
     
     //Obtenemos los datos
@@ -53,7 +49,7 @@ export default function HomeScreen({route, navigation}) {
     querySnapshot.forEach((doc) => {
       const data = doc.data();
       //extraemos el nombre de la bd y lo pasamos como return
-      userName = data.Nombre.nombre      
+      userName = data.Nombre      
     });
     return userName;
   }
@@ -218,8 +214,8 @@ useEffect(() => {
 
     return(
       <>
-      <Text style = {{alignSelf: "center", marginVertical: 0}}>{fecha}</Text>
-      <View style = {{flexDirection: "row", justifyContent: "space-around", backgroundColor: "#6495ED", borderRadius: 20}}>
+          <Text style = {{alignSelf: "center", marginVertical: 0}}>{fecha}</Text>
+          <View style = {{flexDirection: "row", justifyContent: "space-around", backgroundColor: "#6495ED", borderRadius: 20}}>
             
             <View>
               <Text style= {{textDecorationLine: "underline line", fontSize: 18}}>Usuarios</Text>
@@ -270,7 +266,7 @@ useEffect(() => {
           <Text>Nombre: {nombre} </Text>
         <View >
           <Text>Fecha actual: {fechaActual}</Text>
-          <Text>Fecha seleccionada: {currentDay ? currentDay : fechaActual}</Text>
+          <Text>Fecha seleccionada: {currentDay}</Text>
         </View>
       </View>
       {/*Navegar hasta userInfo */}
