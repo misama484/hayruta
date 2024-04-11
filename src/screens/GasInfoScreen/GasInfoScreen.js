@@ -67,7 +67,7 @@ const GasInfoScreen = () => {
  
 
   //METODO PARA MOSTRAR LAS PROVINCIAS FILTRANDO POR TEXTO ESCRITO
-  //Separamos el etxtInput, ya que al actualizar estado, puerde el foco porque vuelve a renderizarse
+  //Separamos el TetxtInput, ya que al actualizar estado, puerde el foco porque vuelve a renderizarse
 
   const SearchInput = ({onSearch}) =>{
 

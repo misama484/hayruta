@@ -11,13 +11,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 
-const EditUserInfo = ({ modal, setOpenModal, correo, setIsUserDataUpdated }) => {
-
-  const handleModal = () => {
-    setOpenModal(!modal);
-  };
-
-  //RECUPERAR DATOS DE BD
+const EditUserInfo = ({ modal, setOpenModal, correo, setIsUserDataUpdated }) => {  
   const [nombre, setNombre] = useState('');
   const [nombreTemp, setNombreTemp] = useState('');
   const [apellido, setApellido] = useState('');
@@ -28,10 +22,11 @@ const EditUserInfo = ({ modal, setOpenModal, correo, setIsUserDataUpdated }) => 
   const [poblacionTemp, setPoblacionTemp] = useState('');
   const [email, setEmail] = useState(correo);
 
-  //estado desde UserInfo para controlar cuando se editan los datos de usuario y actualizar la screen de useInfo.
-
+  const handleModal = () => {
+      setOpenModal(!modal);
+    }; 
  
-  //funcion para obtener nombre de usuario
+  //FUNCION PARA OBTENER NOMBRE DE USUARIO
   const getName = async (email) => {
     const users = collection(db, 'Users');
     const q = query(users, where('email', '==', email))
@@ -60,10 +55,9 @@ const EditUserInfo = ({ modal, setOpenModal, correo, setIsUserDataUpdated }) => 
   }
   ,[])
 
-  //funcion para actualizar datos de usuario
+  //FUNCION PARA ACTUALIZAR DATOS DE USUARIO
   //comprobar si hay modificacion en los datos
   //si la hay, actualizar datos
-  //NOFUNCIONA. ERROR: No document to update
   const updateUser = async (email, newNombre, NewApellido, newUsername, newPoblacion) => {
     // Obtén una referencia al documento del usuario
     const collectionName = collection(db, 'Users');
@@ -74,7 +68,6 @@ const EditUserInfo = ({ modal, setOpenModal, correo, setIsUserDataUpdated }) => 
       if( !userSnap.empty){
       const doc = userSnap.docs[0];
       const userData = doc.data();
-      console.log(userData.length + ' desde updateUser');
       
 
       // Crea un objeto de actualizacion que solo recibe los campos que han sido modificados. (que contengan datos)
@@ -92,71 +85,67 @@ const EditUserInfo = ({ modal, setOpenModal, correo, setIsUserDataUpdated }) => 
       let updatedFields = Object.entries(updateObject).map(([key, value]) => `${key}: ${value}`).join(', ');
       Alert.alert('Datos actualizados', `Los siguientes campos ${updatedFields} han sido actualizados correctamente`);
 
+      //actualizamos el estado de la variable para que se refresque la pantalla
       setIsUserDataUpdated(prevState => !prevState);
     }else{
       Alert.alert('No se ha modificado ningun dato');
     }
-      
-    
-  
   };
 
-  const HandleValues = () => {
-      
-      updateUser(email, nombreTemp, apellidoTemp, usernameTemp, poblacionTemp)
-      console.log(email + "-" + nombreTemp + "-" + apellidoTemp + "-"+ usernameTemp + "-" + poblacionTemp + ' desde handleValues');
-      handleModal();
-      
-  }
+    //controla el envio de datos a la bd para actualizar y el control de la modal
+    const HandleValues = () => {      
+        updateUser(email, nombreTemp, apellidoTemp, usernameTemp, poblacionTemp)
+        handleModal();      
+    }
 
   return (
     <View style = {styles.modalContainer}>
-          <Text
-            style = {{margin: 30, fontSize: 15, fontWeight: 'bold', borderWidth: 1, borderColor: 'black', borderRadius: 10, padding: 10,}}
-          >
-            Editar datos de usuario</Text>
+      <Text
+        style = {{margin: 30, fontSize: 15, fontWeight: 'bold', borderWidth: 1, borderColor: 'black', borderRadius: 10, padding: 10,}}
+      >Editar datos de usuario</Text>    
 
-            <Text>Nombre:</Text>
-          <TextInput 
-            placeholder={nombre}
-            value= {nombreTemp}
-            onChangeText={(value) => setNombreTemp(value)}
-            style={styles.input}
-          />
-          <Text>Apellido:</Text>
-          <TextInput 
-            placeholder={apellido}
-            value={apellidoTemp}
-            onChangeText={(value) => setApellidoTemp(value)}
-            style={styles.input}
-          />
-          <Text>Nombre de usuario:</Text>
-          <TextInput 
-            placeholder={username}
-            value={usernameTemp}
-            onChangeText={(value) => setUsernameTemp(value)}
-            style={styles.input}
-          />
-          <Text>Población:</Text>
-          <TextInput 
-            placeholder={poblacion}
-            value={poblacionTemp}
-            onChangeText={(value) => setPoblacionTemp(value)}
-            style={styles.input}
-          />
+      <Text>Nombre:</Text>
+      <TextInput 
+        placeholder={nombre}
+        value= {nombreTemp}
+        onChangeText={(value) => setNombreTemp(value)}
+        style={styles.input}
+        />
+      <Text>Apellido:</Text>
+      <TextInput 
+        placeholder={apellido}
+        value={apellidoTemp}
+        onChangeText={(value) => setApellidoTemp(value)}
+        style={styles.input}
+       />
+      <Text>Nombre de usuario:</Text>
+      <TextInput 
+        placeholder={username}
+        value={usernameTemp}
+        onChangeText={(value) => setUsernameTemp(value)}
+        style={styles.input}
+       />
+      <Text>Población:</Text>
+      <TextInput 
+        placeholder={poblacion}
+        value={poblacionTemp}
+        onChangeText={(value) => setPoblacionTemp(value)}
+        style={styles.input}
+        />
                
-          <View style = {styles.buttonModalContainer}>
-            <Button
-              style = {styles.button}
-              onPress={() => handleModal()}
-            >Cerrar</Button>
-            <Button
-              style = {styles.button}
-              title="Guardar cambios"
-              onPress={HandleValues}
-            >Guardar</Button>
-          </View>
-        </View>
+      <View style = {styles.buttonModalContainer}>
+        <Button
+          style = {styles.button}
+          onPress={() => handleModal()}
+        >Cerrar</Button>
+            
+        <Button
+          style = {styles.button}
+          title="Guardar cambios"
+          onPress={HandleValues}
+        >Guardar</Button>
+      </View>
+    </View>
   )
 }
 

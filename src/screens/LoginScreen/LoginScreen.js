@@ -3,7 +3,7 @@ import { Image, Text, TextInput, TouchableOpacity, View, StyleSheet, Alert, Touc
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 //FIREEBASE
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, auth, sendPasswordResetEmail } from "firebase/auth";
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../../firebase/config.js';
 import { collection, getDocs, getFirestore, query, where } from "firebase/firestore";
@@ -60,16 +60,27 @@ export default function LoginScreen({ navigation }) {
   const onLoginPress = () => {
     signInWithEmailAndPassword(auth, email, password, name)
     .then(() => {      
-      console.log('signed in!');
+      
       //extraemos el nombre de la bd y lo pasamos como parametro a navigation
       navigation.navigate('Home', {email: email}, {nombre: name});          
       })
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      console.log(errorCode, errorMessage);
+      
       Alert.alert("Error", "Usuario o contraseña incorrectos")
     })
+  };
+
+  //FUNCION BOTON RESET PASSWORD, solicita a firebase que envie el correo de reset de contrasenya
+  const onResetPasswordPress = async () => {
+    try{
+      await sendPasswordResetEmail(auth, email);
+      Alert.alert("Email de reset enviado, por favor revise su correo", "Email enviado")
+    } catch (e){
+     
+      Alert.alert("Error", "No se ha podido enviar el email de reset, porfavor revise su direccin de email")
+    }      
   };
   
   //RENDERIZADO DE LA PANTALLA
@@ -108,7 +119,7 @@ export default function LoginScreen({ navigation }) {
             onPress={() => onLoginPress()}>
             <Text style={styles.buttonTitle}>Log in</Text>
           </TouchableOpacity>
-
+          
           <TouchableOpacity
             style={styles.button}
             onPress={() => OnGasInfoPress()}>
@@ -117,6 +128,7 @@ export default function LoginScreen({ navigation }) {
 
           <View style={styles.footerView}>
             <Text style={styles.footerText}>Don't have an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Sign up</Text></Text>
+            <Text style={styles.footerText}>Reset Password? <Text onPress = {onResetPasswordPress} style={styles.footerLinkPsw}>Click here</Text></Text>
           </View>
         </KeyboardAwareScrollView>     
       </View>
@@ -166,24 +178,35 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
+  
   buttonTitle: {
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold'
   },
+  
   footerView: {
     flex: 1,
     alignItems: 'center',
     marginTop: 20
   },
+
   footerText: {
     fontSize: 16,
     color: '#2e2e2d'
   },
+
   footerLink: {
     color: '#6495ED',
     fontWeight: 'bold',
     fontSize: 16,
-  }
+  },
+
+  footerLinkPsw: {
+    color: 'darkred',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  
 });
 
