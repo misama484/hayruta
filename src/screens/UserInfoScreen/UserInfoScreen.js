@@ -132,12 +132,11 @@ const UserInfoScreen = ({route}) => {
     const querySnapshot = await getDocs(q);
     console.log("tamanyo de query " + querySnapshot.size);
     querySnapshot.forEach((doc) => {
-      console.log(doc.data());
       const dataMesNumber = doc.data();
       results.push(dataMesNumber);
       
     });
-    console.log(results.length + "desde getMonthDays" + mesNumber)
+    
     return results;
   }
 
@@ -148,14 +147,14 @@ const UserInfoScreen = ({route}) => {
     const results = [];
 
     const querySnapshot = await getDocs(q);
-    console.log("tamanyo de query " + querySnapshot.size);
+    
     querySnapshot.forEach((doc) => {
-      console.log(doc.data());
+      
       const dataMesNumberCar = doc.data();
       results.push(dataMesNumberCar);
       
     });
-    console.log(results.length + "desde getMonthDays" + mesNumber)
+    
     return results;
   }
 
@@ -176,12 +175,12 @@ const UserInfoScreen = ({route}) => {
       setUsers(results);
     }
     const fetchMonthDays = async () => {
-      console.log("llamada desde fetchMothDays" + mesNumber);
+      
       const results = await getMonthDays(nombre, mesNumber);
       setUsoMesRuta(results);
     }
     const fetchMonthDaysCar = async () => {
-      console.log("llamada desde fetchMothDays" + mesNumber);
+      
       const results = await getMonthDaysCar(nombre, mesNumber);
       setUsoMesRutaCoche(results);
     }
