@@ -36,21 +36,17 @@ export default function RegistrationScreen({ navigation }) {
       "Nombre_Usuario": userName,
       "email": email,
       "Poblacion": poblacion,
-    });
-    console.log("newUser" + newUser)
+    });    
   }
-
 
   const onRegisterPress = () => {
     createUserWithEmailAndPassword(auth, email, password, apellido, nombre, userName, poblacion)
     .then(() => {
-      addUserBd(apellido, nombre, userName, poblacion, email)
-      console.log('User account created & signed in!');
+      addUserBd(apellido, nombre, userName, poblacion, email)      
       navigation.navigate('Login');
     })
     .catch((error) => {
-      const errorMessage = error.message;
-      console.log(errorMessage);
+      const errorMessage = error.message;      
     });
   }
 
@@ -208,5 +204,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16
   },
-
 });
