@@ -28,14 +28,14 @@ export const AddRuta = (state) => {
             <Text style = {{flex: 1, justifyContent: 'center'}} >Trabaja</Text>
             <Switch style = {{flex: 1, justifyContent: "center"}} value={switchedWork} onValueChange={(value) => {
               onToggleSwitchWork();
-              console.log(value);
+              
             }}/>
           </View>
           <View style = {styles.optionContainer}>
           <Text>Coche</Text>
           <Switch value={switchedCar} onValueChange={(value) => {
             onToggleSwitchCar();
-            console.log(value);
+            
           }}/>
           </View>
           <View style = {styles.buttonContainer}>
@@ -59,7 +59,7 @@ export const AddRuta = (state) => {
           //setDate(currentDate);
           setOpen(!open);
           /*setCurrentDay(currentDate.getDate().toString() + "-" + (currentDate.getMonth() + 1).toString() + "-" + currentDate.getFullYear().toString());*/
-          console.log("desde dateTimePicker" + currentDay);
+          
         }}
         
       /> : null } 

@@ -124,24 +124,23 @@ const UserInfoScreen = ({route}) => {
 
   //CONSULTA LOS DIAS QUE HA USADO LA RUTA EN EL MES SELECCIONADO
   const getMonthDays = async (nombre, mesNumber) => {
-    console.log("llamada desde getMonthDays - " + mesNumber + " - " + nombre);
+  
     const daysMoth = collection(db, 'Ruta');
     const q = query(daysMoth, where('Mes', '==', mesNumber.toString()), where('Usuarios', 'array-contains', nombre));
     const results = [];
 
     const querySnapshot = await getDocs(q);
-    console.log("tamanyo de query " + querySnapshot.size);
+ 
     querySnapshot.forEach((doc) => {
       const dataMesNumber = doc.data();
-      results.push(dataMesNumber);
-      
+      results.push(dataMesNumber);      
     });
     
     return results;
   }
 
   const getMonthDaysCar = async (nombre, mesNumber) => {
-    console.log("llamada desde getMonthDays - " + mesNumber + " - " + nombre);
+ 
     const daysMoth = collection(db, 'Ruta');
     const q = query(daysMoth, where('Mes', '==', mesNumber.toString()), where('Coches', 'array-contains', nombre));
     const results = [];

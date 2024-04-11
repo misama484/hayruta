@@ -23,17 +23,17 @@ const ListaDia = ({fecha}) => {
     const querySnapshot = await getDocs(q);
     
     querySnapshot.forEach((doc) => {
-      console.log(" => ", doc.data());
+      
       const data = doc.data();
       const Usuarios = data.Usuarios;
       setUsuarios(Usuarios);
       Usuarios.forEach((usuario) => {
-        console.log("usuario" + usuario);
+        
       });
       const Coches = data.Coches;
       setCoches(Coches);
       Coches.forEach((coche) => {
-        console.log("coche" + coche);
+        
       });
       
       return Usuarios, Coches;
@@ -45,8 +45,7 @@ const ListaDia = ({fecha}) => {
     setUsuarios(users);
   }
   fetchData(fecha);
-  console.log("fecha " + fecha);
-  console.log("typeoff de usuarios" + typeof usuarios);
+  
 
   return(
   <View style = {{flexDirection: "row", justifyContent: "space-around"}}>

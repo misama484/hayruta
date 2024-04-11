@@ -29,24 +29,23 @@ const GasInfoScreen = () => {
     fetch(`https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/FiltroMunicipio/${idMunicipio}`)
     .then(response => response.json())
     .then(gasolinera => setGasolineras(gasolinera.ListaEESSPrecio));
-    console.log(gasolineras.length + " desde fetchGas");
-    console.log(ubicaciones);
+    
     };
 
   const fetchProvincias = () => {
     fetch(provinciasApi)
     .then(response => response.json())
     .then(provincia => setProvincias(provincia));
-    //console.log(provincias);
+  
 
   };
 
   const fetchPoblaciones = (idProvincia) => {
-    console.log(idProvincia);
+   
     fetch(`https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/Listados/MunicipiosPorProvincia/${idProvincia}`)
     .then(response => response.json())
     .then(poblacion => setPoblaciones(poblacion));
-    console.log(poblaciones);
+ 
   };
   
   useEffect(() => {
@@ -61,8 +60,7 @@ const GasInfoScreen = () => {
   useEffect(() => {
     fetchGas(idMunicipio);
     
-    console.log(gasolineras.length + " desde useEffect");
-    //console.log(ubicaciones.length + " ubicaciones desde useEffect");
+  
   }, [idMunicipio])
  
 
@@ -216,9 +214,7 @@ const GasInfoScreen = () => {
                   setGasolineraName(gasolinera.Rótulo)
                   setUbicaciones({latitud: gasolinera.Latitud, longitud: gasolinera["Longitud (WGS84)"], rotulo: gasolinera.Rótulo});
                   setEESS(gasolinera);
-                  console.log(gasolinera["Longitud (WGS84)"] + " desde ShowGasStations");
-                  console.log(ubicaciones.rotulo + " desde ShowGasStations latitud");
-
+              
                 }}
                 
               />
