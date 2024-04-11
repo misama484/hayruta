@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Image, Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native'
+import { Image, Text, TextInput, TouchableOpacity, View, StyleSheet, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 //FIREEBASE
@@ -9,7 +9,7 @@ import { firebaseConfig } from '../../firebase/config.js';
 import { collection, getDocs, getFirestore, query, where } from "firebase/firestore";
 
 //NAVIGATION
-import { useNavigation } from '@react-navigation/native';
+//import { useNavigation } from '@react-navigation/native';
 
 
 export default function LoginScreen({ navigation }) {
@@ -17,8 +17,7 @@ export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const [modal, setModal] = useState(false);
-
+ 
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -40,9 +39,7 @@ export default function LoginScreen({ navigation }) {
     });
     return name;  
   }
-
-  let nombreUser = getUserData(email);
-
+  
   const onFooterLinkPress = () => {
     navigation.navigate('Registration')
   }
@@ -50,76 +47,80 @@ export default function LoginScreen({ navigation }) {
   const OnGasInfoPress = () => {
     navigation.navigate('GasInfoScreen')
   };
+
+  //para evitar errores convertimos el email a minusculas y eliminamos espacios en blanco.
+
+  //TODO anyadimos validacion de que lleve la @ y el .
   const formatEmail = (email) => {
-    const emailFormatted = email.trim().toLowerCase();
-    console.log(emailFormatted);
-    setEmail(emailFormatted);
-    console.log(email + "desde formatEmail: ");
+    const emailFormatted = email.trim().toLowerCase();    
+    setEmail(emailFormatted);    
   };
   
+  //FUNCION BOTON LOGIN
   const onLoginPress = () => {
-    signInWithEmailAndPassword(auth, email, password, nombreUser)
+    signInWithEmailAndPassword(auth, email, password, name)
     .then(() => {      
       console.log('signed in!');
       //extraemos el nombre de la bd y lo pasamos como parametro a navigation
-      navigation.navigate('Home', {email: email}, {nombre: name});
-          
+      navigation.navigate('Home', {email: email}, {nombre: name});          
       })
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
       console.log(errorCode, errorMessage);
+      Alert.alert("Error", "Usuario o contraseña incorrectos")
     })
   };
   
-  
+  //RENDERIZADO DE LA PANTALLA
+  /* TouchableWithoutFeedback para cerrar el teclado al pulsar fuera de el*/
   return (
-    <View style={styles.container}>
-      <KeyboardAwareScrollView
-        style={{ flex: 1, width: '100%' }}
-        keyboardShouldPersistTaps="always">
-        <Image
-          style={styles.logo}
-          source={require('../../../assets/logo.png')}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="E-mail"
-          placeholderTextColor="#aaa"
-          onChangeText={(text) => formatEmail(text)}
-          value={email}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-        <TextInput
-          style={styles.input}
-          placeholderTextColor="#aaa"
-          secureTextEntry
-          placeholder="Password"
-          onChangeText={(text) => setPassword(text)}
-          value={password}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => onLoginPress()}>
-          <Text style={styles.buttonTitle}>Log in</Text>
-        </TouchableOpacity>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}> 
+      <View style={styles.container}>
+        <KeyboardAwareScrollView
+          style={{ flex: 1, width: '100%' }}
+          keyboardShouldPersistTaps="always">
+          <Image
+            style={styles.logo}
+            source={require('../../../assets/logo.png')}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="E-mail"
+            placeholderTextColor="#aaa"
+            onChangeText={(text) => formatEmail(text)}
+            value={email}
+            underlineColorAndroid="transparent"
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.input}
+            placeholderTextColor="#aaa"
+            secureTextEntry
+            placeholder="Password"
+            onChangeText={(text) => setPassword(text)}
+            value={password}
+            underlineColorAndroid="transparent"
+            autoCapitalize="none"
+          />
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => onLoginPress()}>
+            <Text style={styles.buttonTitle}>Log in</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => OnGasInfoPress()}>
-          <Text style={styles.buttonTitle}>GasInfo</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => OnGasInfoPress()}>
+            <Text style={styles.buttonTitle}>GasInfo</Text>
+          </TouchableOpacity>
 
-        <View style={styles.footerView}>
-          <Text style={styles.footerText}>Don't have an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Sign up</Text></Text>
-        </View>
-      </KeyboardAwareScrollView>
-
-     
-    </View>
+          <View style={styles.footerView}>
+            <Text style={styles.footerText}>Don't have an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Sign up</Text></Text>
+          </View>
+        </KeyboardAwareScrollView>     
+      </View>
+    </TouchableWithoutFeedback>
   )
 }
 
@@ -134,7 +135,6 @@ const styles = StyleSheet.create({
   
   },
   logo: {
-    //flex: 1,
     height: 100,
     width: 400,
     alignSelf: "center",
@@ -149,12 +149,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignSelf: 'center',
     overflow: 'hidden',
-    backgroundColor: 'white',
+    backgroundColor: '#F4F4F4',
     borderWidth: 1,
     borderColor: "#6495ED",
     marginTop: 10,
     marginBottom: 10,
-    //marginLeft: 30,
     paddingLeft: 16
   },
   button: {

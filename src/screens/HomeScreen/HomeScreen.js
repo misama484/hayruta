@@ -2,13 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, FlatList, Alert, Modal, ScrollView } from 'react-native'
 import { Calendar } from 'react-native-calendars' 
-import { Switch } from 'react-native-paper';
-import InfoSemana from '../../../components/InfoSemana';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { Button } from 'react-native-paper';
-import ListaDia from '../../../components/ListaDia.js';
-import { useNavigation } from '@react-navigation/native';
+import { Switch, Button } from 'react-native-paper';
 
 //FIREBASE
 import { doc, getDoc, setDoc, getFirestore, collection, getDocs, query, where } from "firebase/firestore";
@@ -29,7 +23,6 @@ export default function HomeScreen({route, navigation}) {
   const [modal, setOpenModal] = useState(false);
   const [usuarios, setUsuarios] = useState([]);
   const [coches, setCoches] = useState([]);
-  //const [email, setEmail] = useState('');
   const [nombre, setNombre] = useState('');
   const [selectedMoth, setSelectedMonth] = useState('');
 
@@ -49,7 +42,8 @@ export default function HomeScreen({route, navigation}) {
     querySnapshot.forEach((doc) => {
       const data = doc.data();
       //extraemos el nombre de la bd y lo pasamos como return
-      userName = data.Nombre      
+      userName = data.Nombre
+      //setNombre(userName)      
     });
     return userName;
   }
@@ -61,8 +55,6 @@ export default function HomeScreen({route, navigation}) {
     setNombre(name);
   }
   fetchName(email);
-
-  
 
   
  //funcion para añadir a la bd
@@ -133,10 +125,6 @@ export default function HomeScreen({route, navigation}) {
       //añadimos el nombre a las variables
       Coches.push(nombre);
     }
-    //añadimos el nombre a las variables
-    //Usuarios.push(nombre);
-    //Coches.push(nombre);
-
     console.log(fecha1 + nombre + " desde addDoc");
     //añadimos los datos a la bd
     await setDoc(docRef, {
@@ -150,8 +138,7 @@ export default function HomeScreen({route, navigation}) {
   
 
 
-useEffect(() => {
-   
+useEffect(() => {   
     const ruta = collection(db, 'Ruta');
     const q = query(ruta, where('Fecha', '==', currentDay.toString()));
     console.log("fecha desde udeEffect " + currentDay);
@@ -198,7 +185,6 @@ useEffect(() => {
       });
     };
 
-
       consulta(currentDay);
       <ListaDiaLocal fecha = {currentDay} Usuarios = {usuarios} Coches = {coches} />   
     
@@ -206,12 +192,9 @@ useEffect(() => {
 
   
 
-  const ListaDiaLocal = ({fecha, Usuarios, Coches}) => {
-    
+  const ListaDiaLocal = ({fecha, Usuarios, Coches}) => {    
     const usuarios = Usuarios;
     const coches = Coches;
-
-
     return(
       <>
           <Text style = {{alignSelf: "center", marginVertical: 0}}>{fecha}</Text>
@@ -253,11 +236,12 @@ useEffect(() => {
 
   const handleUserInfo = (email, nombre) => {
     email = route.params.email;
-    nombre = nombre;
+    setNombre(nombre)
     console.log("email desde handleUserInfo - " + email);
     navigation.navigate('UserInfoScreen', {email: email});
   }
   
+  //RENDERIZADO PRINCIPAL DE LA PANTALLA
   return (
     <View style ={styles.container} contentContainerStyle={{ alignItems: 'center'}}>
      <View style = {styles.header}>        
@@ -286,6 +270,7 @@ useEffect(() => {
       }}
       >Precios combustible</Button>
       </View>
+     
 
     </View>
       <Calendar
@@ -312,7 +297,6 @@ useEffect(() => {
               //enviar a bd la fecha, el usuario y si coge coche
               setOpenModal(!modal);
               console.log(modal)
-              //addDoc({currentDay})
             }}          
           >Anyadir Usuario</Button>
 
@@ -385,8 +369,6 @@ useEffect(() => {
         </View>
 
     </Modal> : null} 
-
-
 
     </View>
 

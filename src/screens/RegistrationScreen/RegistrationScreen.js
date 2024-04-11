@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Image, Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native'
+import { Image, Text, TextInput, TouchableOpacity, View, StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 //FIREBASE  
@@ -8,8 +8,6 @@ import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../../firebase/config.js';
 import { getFirestore, doc, setDoc, collection, addDoc } from 'firebase/firestore';
 
-
-//import { firebase } from '../../firebase/config.js'
 
 
 export default function RegistrationScreen({ navigation }) {
@@ -47,13 +45,10 @@ export default function RegistrationScreen({ navigation }) {
     createUserWithEmailAndPassword(auth, email, password, apellido, nombre, userName, poblacion)
     .then(() => {
       addUserBd(apellido, nombre, userName, poblacion, email)
-      console.log('User account created & signed in!');      
-      //const user = userCredential.user;
-      //console.log(user);
+      console.log('User account created & signed in!');
       navigation.navigate('Login');
     })
     .catch((error) => {
-      const errorCode = error.code;
       const errorMessage = error.message;
       console.log(errorMessage);
     });
@@ -65,89 +60,91 @@ export default function RegistrationScreen({ navigation }) {
   };
   
   return (
-    <View style={styles.container}>
-      <KeyboardAwareScrollView
-        style={{ flex: 1, width: '100%' }}
-        keyboardShouldPersistTaps="always">
-        <Image
-          style={styles.logo}
-          source={require('../../../assets/icon.png')}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="nombre"
-          placeholderTextColor="#aaa"
-          onChangeText={(text) => setNombre(text)}
-          value={nombre}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="apellido"
-          placeholderTextColor="#aaa"
-          onChangeText={(text) => setApellido(text)}
-          value={apellido}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Nombre Usuario"
-          placeholderTextColor="#aaa"
-          onChangeText={(text) => setUserName(text)}
-          value={userName}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="poblacion"
-          placeholderTextColor="#aaa"
-          onChangeText={(text) => setPoblacion(text)}
-          value={poblacion}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          placeholderTextColor="#aaa"
-          onChangeText={(text) => formatEmail(text)}
-          value={email}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-        <TextInput
-          style={styles.input}
-          placeholderTextColor="#aaa"
-          secureTextEntry
-          placeholder="Password"
-          onChangeText={(text) => setPassword(text)}
-          value={password}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-        <TextInput
-          style={styles.input}
-          placeholderTextColor="#aaa"
-          secureTextEntry
-          placeholder="Confirm Password"
-          onChangeText={(text) => setConfirmPassword(text)}
-          value={confirmPassword}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => onRegisterPress()}>
-          <Text style={styles.buttonTitle}>Create account</Text>
-        </TouchableOpacity>
-        <View style={styles.footerView}>
-          <Text style={styles.footerText}>Already got an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Log in</Text></Text>
-        </View>
-      </KeyboardAwareScrollView>
-    </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <KeyboardAwareScrollView
+          style={{ flex: 1, width: '100%' }}
+          keyboardShouldPersistTaps="always">
+          <Image
+            style={styles.logo}
+            source={require('../../../assets/logo.png')}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="nombre"
+            placeholderTextColor="#aaa"
+            onChangeText={(text) => setNombre(text)}
+            value={nombre}
+            underlineColorAndroid="transparent"
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="apellido"
+            placeholderTextColor="#aaa"
+            onChangeText={(text) => setApellido(text)}
+            value={apellido}
+            underlineColorAndroid="transparent"
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Nombre Usuario"
+            placeholderTextColor="#aaa"
+            onChangeText={(text) => setUserName(text)}
+            value={userName}
+            underlineColorAndroid="transparent"
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="poblacion"
+            placeholderTextColor="#aaa"
+            onChangeText={(text) => setPoblacion(text)}
+            value={poblacion}
+            underlineColorAndroid="transparent"
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            placeholderTextColor="#aaa"
+            onChangeText={(text) => formatEmail(text)}
+            value={email}
+            underlineColorAndroid="transparent"
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.input}
+            placeholderTextColor="#aaa"
+            secureTextEntry
+            placeholder="Password"
+            onChangeText={(text) => setPassword(text)}
+            value={password}
+            underlineColorAndroid="transparent"
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.input}
+            placeholderTextColor="#aaa"
+            secureTextEntry
+            placeholder="Confirm Password"
+            onChangeText={(text) => setConfirmPassword(text)}
+            value={confirmPassword}
+            underlineColorAndroid="transparent"
+            autoCapitalize="none"
+          />
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => onRegisterPress()}>
+            <Text style={styles.buttonTitle}>Create account</Text>
+          </TouchableOpacity>
+          <View style={styles.footerView}>
+            <Text style={styles.footerText}>Already got an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Log in</Text></Text>
+          </View>
+        </KeyboardAwareScrollView>
+      </View>
+    </TouchableWithoutFeedback>
   )
 }
 
@@ -155,13 +152,16 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    alignItems: 'center'
+    flexDirectio: 'column',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: 'white',
   },
 
   logo: {
     flex: 1,
-    height: 10,
-    width: 90,
+    height: 60,
+    width: 250,
     alignSelf: 'center',
     margin: 30
   },
@@ -169,11 +169,15 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: 5,
     overflow: 'hidden',
-    backgroundColor: 'white',
+    backgroundColor: '#F4F4F4',
+    borderWidth: 1,
+    borderColor: '#6495ED',
     marginTop: 10,
     marginBottom: 10,
-    marginRight: 30,
-    paddingLeft: 16
+    marginRight: '5%',
+    marginLeft: '5%',
+    paddingLeft: 16,
+    
   },
   button: {
     backgroundColor: '#788eec',
