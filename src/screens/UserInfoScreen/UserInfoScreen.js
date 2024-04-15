@@ -246,7 +246,7 @@ const UserInfoScreen = ({route}) => {
           title={meses}
           expanded={menuMesesVisible}
           onPress={menuMesesVisibleHandler}
-          left={props => <List.Icon {...props} icon="account" color='black'/>}
+          left={props => <List.Icon {...props} icon="calendar" color='black'/>}
           style = {{backgroundColor: '#6495ED', borderRadius: 10, borderWidth: 2, borderColor: 'black', height: 60, width: 'auto', minWidth: 170}}
         >
           {meses.map((mes, index) => (

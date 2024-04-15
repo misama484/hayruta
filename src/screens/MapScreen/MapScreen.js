@@ -39,7 +39,7 @@ const MapScreen = ({route}) => {
     longitude: -0.559892
   }
 
-  useEffect(() => {
+ /*useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
@@ -53,7 +53,7 @@ const MapScreen = ({route}) => {
         longitude: location.coords.longitude
       });
     })();
-  }, []);
+  }, []); */ 
 
 
   return (
@@ -73,6 +73,7 @@ const MapScreen = ({route}) => {
           style={{marginTop: 10}}
         >Como llegar</Button>
       </View>
+      <View style={styles.mapContainer}>    
       <MapView
         style={styles.map}
         initialRegion={{
@@ -87,25 +88,8 @@ const MapScreen = ({route}) => {
           coordinate={origin}
           title={"Marines"}
           description={"Pueblo de Marines"}/>
-        <MapViewDirections
-          origin={origin}
-          destination={destination}
-          apikey={"AIzaSyDxbPcazMlMBcCsRs6Zd71K3A819j4LLDk"}
-          />
-        {/*
-        <MapView.Marker coordinate={origin} />
-        <MapView.Marker coordinate={destination} />
-         */}
-
-        <MapViewDirections
-          origin={origin}
-          destination={destination}
-          apikey={"AIzaSyDxbPcazMlMBcCsRs6Zd71K3A819j4LLDk"}
-          strokeWidth={3}
-          strokeColor="hotpink"
-        />
-
-      </MapView>  
+      </MapView>
+      </View>  
     </View>
   )
 }
@@ -116,10 +100,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  map: {
+  mapContainer: {
     width: '100%',
     height: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
     margin: 20,
+    borderWidth: 1,
+    borderColor: '#000000',
+  },
+  map: {
+    width: '100%',
+    height: '100%',
+    margin: 20,
+    
   },
   infoContainer: {
     flexDirection: 'column',
@@ -134,3 +128,23 @@ const styles = StyleSheet.create({
 }) 
 
 export default MapScreen
+
+
+{/*<MapViewDirections
+          origin={origin}
+          destination={destination}
+          apikey={"AIzaSyDxbPcazMlMBcCsRs6Zd71K3A819j4LLDk"}
+          />
+         
+        <MapView.Marker coordinate={origin} />
+        <MapView.Marker coordinate={destination} />
+         
+
+         <MapViewDirections
+         origin={origin}
+         destination={destination}
+         apikey={"AIzaSyDxbPcazMlMBcCsRs6Zd71K3A819j4LLDk"}
+         strokeWidth={3}
+         strokeColor="hotpink"
+       /> 
+      */ }
