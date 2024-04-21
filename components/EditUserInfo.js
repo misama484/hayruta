@@ -97,12 +97,12 @@ const EditUserInfo = ({ modal, setOpenModal, correo, setIsUserDataUpdated }) => 
         updateUser(email, nombreTemp, apellidoTemp, usernameTemp, poblacionTemp)
         handleModal();      
     }
-
+    /*Evitamos que se desplace la modal al mostrar el teclado */
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}> {/*Evitamos que se desplace la modal al mostrar el teclado */}
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}> 
       <ScrollView style = {styles.modalContainer}>
         <Text
-          style = {{margin: 20, fontSize: 15, fontWeight: 'bold', borderWidth: 1, borderColor: 'black', borderRadius: 10, padding: 10,}}
+          style = {{margin: 20, fontSize: 15, alignSelf: 'center', fontWeight: 'bold', borderRadius: 10, padding: 10, }}
         >Editar datos de usuario</Text>    
 
         <Text>Nombre:</Text>
@@ -138,13 +138,13 @@ const EditUserInfo = ({ modal, setOpenModal, correo, setIsUserDataUpdated }) => 
           <Button
             style = {styles.button}
             onPress={() => handleModal()}
-          >Cerrar</Button>
+          ><Text style={{color: 'black'}}>Cerrar</Text></Button>
               
           <Button
             style = {styles.button}
             title="Guardar cambios"
             onPress={HandleValues}
-          >Guardar</Button>
+          ><Text style={{color: 'black'}}>Guardar</Text></Button>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
   }, 
 
   button:{
-    backgroundColor: '#6495ED',
+    backgroundColor: 'white',
     marginLeft: 30,
     marginRight: 30,
     marginTop: 20,
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     width: 100,
     borderRadius: 20,
     borderWidth: 1, 
-    borderColor: 'black',
+    borderColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
     
