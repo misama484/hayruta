@@ -16,32 +16,18 @@ const MapScreen = ({route}) => {
 
 
   //coordenadas de origen que se mostraran al abrir el mapa (coordenadas de la base)
-  /*
-  const [origin, setOrigin] = useState({
-    latitude: 39.141611, 
-    longitude: -0.439472
-  });
-  */
+  
   const [origin, setOrigin] = useState({
     latitude: parseFloat(latitud), 
     longitude: parseFloat(longitud)
   });
   const [destination, setDestination] = useState({
     latitude: parseFloat(latitud), 
-    longitude: parseFloat(longitud)
+    longitud: parseFloat(longitud)
   });
 
-  //coordenadas de casa
-  /*const [destination, setDestination] = useState({
-    latitude: 39.154925, 
-    longitude: -0.435294
-  });*/
 
-  const Marines = {
-    latitude: 39.674159, 
-    longitude: -0.559892
-  }
-
+//OBTIENE LAS COORDENADAS DE LA UBICACION ACTUAL DEL USUARIO(en caso del emulador, estan introducidas manualmente en la configuracion del emulador con la ubicacion de FloridaUniversitaria)
  useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -55,6 +41,10 @@ const MapScreen = ({route}) => {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude
       });
+      setDestination({
+        latitude: parseFloat(latitud),
+        longitude: parseFloat(longitud)
+      })
       console.log(location);
     })();
   }, []);
