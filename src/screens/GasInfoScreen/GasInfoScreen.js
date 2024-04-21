@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Touchable, TouchableOpacity, Alert, ScrollView, SafeAreaView, TextInput } from 'react-native';
-import { List, Button } from 'react-native-paper';
+import { List, Button, Icon } from 'react-native-paper';
 import MapView from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 
 const GasInfoScreen = () => {
@@ -78,7 +79,7 @@ const GasInfoScreen = () => {
     return (
       <TextInput
         style={styles.textInputProvincia}
-        onChangeText={text => setSearchText(text)}
+        onChangeText={text => setSearchText(text.trim())} //eliminamos los espacios delante y detras que pudiera haber
         value={searchText}
         placeholder='Buscar' 
       />
@@ -106,13 +107,13 @@ const GasInfoScreen = () => {
   
     return (
       <List.Section title='Seleccione provincia'>
-        <ScrollView style={{ maxHeight: '76%' }}>
+        <ScrollView style={{ maxHeight: '78%' }}>
           <SearchInput onSearch = {handleSearch}/>
           <List.Accordion
             title={provinciaName}
             expanded={visible}
             onPress={visibleHandler}
-            left={props => <List.Icon {...props} icon="account" color='black'/>}
+            left={props => <List.Icon {...props} icon="city-variant-outline" color='black'/>}
             style = {{backgroundColor: '#6495ED', borderRadius: 10, borderWidth: 2, borderColor: 'black', height: 60, width: 'auto', minWidth: 250}}
           >
             {filteredProvincias.map((provincia, index) => (
@@ -156,14 +157,15 @@ const GasInfoScreen = () => {
     };
 
     return (
-      <List.Section title='Seleccione poblacion' style = {{marginVertical: 0}}>
-        <ScrollView style={{ maxHeight: '76%' }}>
+      
+      <List.Section title='Seleccione poblacion'>        
+        <ScrollView style={{ maxHeight: '78%' }}>
           <SearchInput onSearch={handleSearchPoblacion}/>
           <List.Accordion
             title={municipio}
             expanded={visible}
             onPress={visibleHandler}
-            left={props => <List.Icon {...props} icon="account" color='black'/>}
+            left={props => <List.Icon {...props} icon="bank" color='black'/>}
             style = {{backgroundColor: '#6495ED', borderRadius: 10, borderWidth: 2, borderColor: 'black', height: 60, width: 'auto', minWidth: 250}}
           >
             {filteredPoblaciones.map((poblacion, index) => (
@@ -180,50 +182,14 @@ const GasInfoScreen = () => {
             ))}
           </List.Accordion>
         </ScrollView>
+        
       </List.Section>
+      
       
     );
   };
 
-  const ShowGasStations = () => {
 
-    const [visible, setVisible] = useState(false);
-    const visibleHandler = () => {
-      setVisible(!visible);
-    }
-    const closeMenu = () => setVisible(false);
-
-    return (
-      <List.Section title='Seleccione Gasolinera'>
-        <ScrollView style={{ maxHeight: '59%'}}>
-          {/*OJO CON LA TILDE DE ROTULO, SIN ELLA NO MUETSRA NADA */}
-          <List.Accordion
-            title={gasolineraName}
-            expanded={visible}
-            onPress={visibleHandler}
-            left={props => <List.Icon {...props} icon="account" color='black'/>}
-            style = {{backgroundColor: '#6495ED', borderRadius: 10, borderWidth: 2, borderColor: 'black', height: 60, width: 'auto', minWidth: 250}}
-          >
-            {gasolineras.map((gasolinera, index) => (
-              <List.Item
-              style = {{padding: 10, fontSize: 18, backgroundColor: "#6495ED", borderWidth: 1, borderColor: "black", borderRadius: 10, margin: 5,}}
-                key={index}
-                title={gasolinera.Rótulo} 
-                onPress={() => {
-                  closeMenu();                  
-                  setGasolineraName(gasolinera.Rótulo)
-                  setUbicaciones({latitud: gasolinera.Latitud, longitud: gasolinera["Longitud (WGS84)"], rotulo: gasolinera.Rótulo});
-                  setEESS(gasolinera);
-              
-                }}
-                
-              />
-            ))}
-          </List.Accordion>
-        </ScrollView>
-      </List.Section>
-    );
-  };
 
   const ShowEESSList = () => {
 
@@ -253,7 +219,7 @@ const GasInfoScreen = () => {
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => OnMapButtonPress(item)}>
-                <Text style={styles.buttonTitle}>Go to Map</Text>
+                <Text style={styles.buttonTitle}> Go to Map</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -263,19 +229,7 @@ const GasInfoScreen = () => {
     );
   }
 
-  const GasDetails = () => {
-    return (
-      <>
-      <View>
-        <Text>GasoleoA: {EESS["Precio Gasoleo A"]} Euros</Text>
-        <Text>Gasolina 95: {EESS["Precio Gasolina 95 E5"]} Euros</Text>
-      </View>
-      <View>
-        <Text>Nombre : {EESS.Rótulo}</Text>
-      </View>
-      </>
-    );
-  };
+
 
   const OnMapButtonPress = (gasolinera) => {
     setEESS(gasolinera);
@@ -296,6 +250,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'red',
   },
   text: {
     fontSize: 20,
@@ -316,7 +272,7 @@ const styles = StyleSheet.create({
   },
   textInputProvincia: {
     height: 40,
-    borderColor: 'black',
+    borderColor: 'white',
     borderWidth: 2,
     marginVertical: 10,
     padding: 10,
