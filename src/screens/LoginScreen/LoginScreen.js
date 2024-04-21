@@ -109,7 +109,7 @@ export default function LoginScreen({ navigation }) {
             placeholderTextColor="#aaa"
             secureTextEntry
             placeholder="Password"
-            onChangeText={(text) => setPassword(text)}
+            onChangeText={(text) => setPassword(text.trim())}
             value={password}
             underlineColorAndroid="transparent"
             autoCapitalize="none"

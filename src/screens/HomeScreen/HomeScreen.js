@@ -1,8 +1,10 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Text, View, StyleSheet, FlatList, Alert, Modal, ScrollView } from 'react-native'
 import { Calendar } from 'react-native-calendars' 
-import { Switch, Button } from 'react-native-paper';
+import { Switch, Button, Icon, IconButton } from 'react-native-paper';
+import { useFocusEffect } from '@react-navigation/native';
+import { format } from 'date-fns';
 
 //FIREBASE
 import { doc, getDoc, setDoc, getFirestore, collection, getDocs, query, where } from "firebase/firestore";
@@ -25,13 +27,15 @@ export default function HomeScreen({route, navigation}) {
   const [coches, setCoches] = useState([]);
   const [nombre, setNombre] = useState('');
   const [selectedMoth, setSelectedMonth] = useState('');
-  //estado para actualizar la lista de usuarios y coches, cuando se realize algun cambio cambiara el estado y ese cambio, atraves de useEffect, actualizara la lista
+  //estado para actualizar la lista de usuarios y coches, cuando se realize algun cambio, cambiara el estado y ese cambio, atraves de useEffect, actualizara la lista
   const [updateList, setUpdateList] = useState(false);
 
   //fecha actual
   const fecha = new Date();
   const fechaActual = fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear();
 
+  //Formateamos la fecha porque calendar necesita string
+  const fechaFormateada = format(new Date(), 'yyyy-MM-dd');
 
   //funcion para obtener nombre de usuario
   const getName = async (email) => {
@@ -56,6 +60,13 @@ export default function HomeScreen({route, navigation}) {
     setNombre(name);
   }
   fetchName(email);
+  
+  //FUNCION PARA ACTUALIZAR EL NOMBRE CADA VEZ QUE CARGA LA PANTALLA, usamos el hook useFocusEffect de navigation, que se ejecuta cada vez que la screen entra en foco
+  useFocusEffect(
+    useCallback(() => {
+      fetchName(email);
+    }, [fetchName])    
+  )
 
   
  //FUNCION PARA AÑADIR USUARIO A LA RUTA
@@ -76,7 +87,7 @@ export default function HomeScreen({route, navigation}) {
     //COMPROBAR QUE EL NOMBRE NO EXISTE EN BD
     if(Usuarios.includes(nombre)){
       Alert.alert("Atencion", "El usuario ya esta en la lista");
-      
+      return;
     }
     else{
       //añadimos el nombre a las variables
@@ -109,8 +120,8 @@ export default function HomeScreen({route, navigation}) {
     }
 
     if(Usuarios.includes(nombre)){
-      Alert.alert("Atencion", "El usuario ya esta en la lista desde addDoc");
-      //return;
+      Alert.alert("Atencion", "El usuario ya esta en la lista");
+      return;
     }
     else{
       //añadimos el nombre a las variables
@@ -149,7 +160,7 @@ export default function HomeScreen({route, navigation}) {
             style: 'cancel',
           },
           {
-            text: 'Anyadir Usuario', 
+            text: 'Añadir Usuario', 
             onPress: () => {
               //Abrir modal para enviar a bd la fecha, el usuario y si coge coche
               setOpenModal(!modal);             
@@ -185,24 +196,24 @@ export default function HomeScreen({route, navigation}) {
 
     return(
       <>
-        <Text style = {{alignSelf: "center", marginVertical: 0}}>{fecha}</Text>
-          <View style = {{flexDirection: "row", justifyContent: "space-around", backgroundColor: "#6495ED", borderRadius: 20}}>
-            
+        
+          <View style = {{flexDirection: "row", justifyContent: "space-around", backgroundColor: "#6495ED", borderRadius: 20}}>            
             <View>
               <Text style= {{fontSize: 18}}>Usuarios</Text>
               <FlatList
-              data = {usuarios}
               
+                        
+              data = {usuarios}              
               renderItem = {({item}) => (
                 <Text>{item}</Text>
               )}
               keyExtractor = {item => item}
               />
             </View>
-
             <View>
               <Text style= {{fontSize: 18}}>Coches</Text>
               <FlatList
+              
               data = {coches}
               renderItem = {({item}) => (
                 <Text>{item}</Text>
@@ -230,7 +241,6 @@ export default function HomeScreen({route, navigation}) {
   }
 
   //FUNCION PARA ELIMINAR USUARIO DE LA RUTA
-  //TODO al eliminar conductor, como tambien se elimina de la lista de usuarios,salta el alert de que no esta en la lista
   const deleteUser = async (nombre) => {
     //obtenemos el documento correspondiente a la fecha seleccionada, comprobamos que hay una fecha seleccionada
     if(currentDay){
@@ -283,42 +293,44 @@ export default function HomeScreen({route, navigation}) {
   
   //RENDERIZADO PRINCIPAL DE LA PANTALLA
   return (
+    <>
     <View style ={styles.container} contentContainerStyle={{ alignItems: 'center'}}>
      <View style = {styles.header}>        
         <View style = {styles.bloqueFecha}>
           <Text>Email: {email} </Text>
-          <Text>Nombre: {nombre} </Text>
-        <View >
+          <Text>Nombre: {nombre} </Text> 
           <Text>Fecha actual: {fechaActual}</Text>
           <Text>Fecha seleccionada: {currentDay}</Text>
         </View>
-      </View>
+      
 
       {/*Navegar hasta userInfo */}
-    <View style = {{flexDirection: 'column', justifyContent: 'space-around', gap: 10}}>
-      <Button
-        mode='contained'
-        style = {{backgroundColor: '#6495ED', marginTop: 10}}
-        onPress={() => {
-          handleUserInfo();
-        }}
-      >Informacion Usuario</Button> 
-      {/* Navegar hasta GasInfo */}     
-      <Button
-        mode='contained'
-        style = {{backgroundColor: '#6495ED', marginTop: 10}}
-        onPress={() => {
-          navigation.navigate('GasInfoScreen');
-        }}
-      >Precios combustible</Button>
-    </View>
+      <View style = {styles.buttonHeader}>
+        <IconButton
+          mode='contained'
+          icon= 'account-cog'
+          iconColor='white'
+          style = {styles.button}
+          onPress={() => {
+            handleUserInfo();
+          }}
+        /> 
+        {/* Navegar hasta GasInfo */}     
+        <IconButton
+          mode='contained'
+          icon={'gas-station'}
+          iconColor='white'
+          style = {styles.button}
+          onPress={() => {
+            navigation.navigate('GasInfoScreen');
+          }}
+        />
+      </View>
+   </View>   
      
-    {/* CALENDARIO HOMESCREEN */}    
-    </View>
       <Calendar
         style={styles.calendar}
-        current={date}
-       
+        current={fechaFormateada}       
         onDayPress={(day) => {
           setCurrentDay(day.day.toString() + "-" + day.month.toString() + "-" + day.year.toString());
           setSelectedMonth(day.month.toString());
@@ -337,7 +349,7 @@ export default function HomeScreen({route, navigation}) {
               //enviar a bd la fecha, el usuario y si coge coche
               setOpenModal(!modal);
             }}          
-          >Anyadir Usuario</Button>
+          >Añadir Usuario</Button>
 
           <Button
             mode='contained'
@@ -347,7 +359,10 @@ export default function HomeScreen({route, navigation}) {
             }}          
           >Eliminar Usuario</Button>
         </View>
-        <ListaDiaLocal fecha = {currentDay} Usuarios = {usuarios} Coches = {coches} />
+        {/* LISTA DE USUARIOS DEL DIA */}
+        <View style={styles.listaDiaLocalContainer}>
+          <ListaDiaLocal fecha = {currentDay} Usuarios = {usuarios} Coches = {coches} />
+        </View>
       
       {/* MODAL PARA ANYADIR USUARIO A LA RUTA */}
       {modal ? <Modal
@@ -381,12 +396,10 @@ export default function HomeScreen({route, navigation}) {
               mode='contained'
               onPress={() => {
                 //enviar a bd la fecha, el usuario y si coge coche
-                {switchedWork ? 
+                {switchedWork && !switchedCar ? 
                   addDocUsers({currentDay}, nombre)
                   : null
                 }
-                //TODO
-                //AL MARCAR AMBOS, MUESTRA TAMBIEN EL ALERT DE TRABAJA
                 {switchedCar && switchedWork ?
                 addDoc({currentDay}, nombre) : null}
                 //cambiar un estado para ejecutar useEffect y actualizar lista                
@@ -405,6 +418,8 @@ export default function HomeScreen({route, navigation}) {
       </Modal> : null} 
     </View>
   </View>
+  </>
+  
   )
 }
 
@@ -412,26 +427,29 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    alignItems: 'center'
-    
+    alignItems: 'center',
   },
   header:{ 
     flexDirection: "row",
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
-    gap: 20,
-    
+    marginTop: 2,
+  },
+  buttonHeader: {
+    marginHorizontal: 10,
+    flexDirection: 'column', 
+    justifyContent: 'center', 
+    alignItems: 'center',
   },
   bloqueFecha: {
     flexDirection: 'column',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    paddingVertical: 20,
-    paddingHorizontal: 10,
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    padding: 10,
+    width: '60%',
+    height: 100,
     backgroundColor: '#6495ED',
-    borderRadius: 30, 
+    borderRadius: 20, 
     elevation: 5,
   },
   input: {
@@ -448,8 +466,8 @@ const styles = StyleSheet.create({
 
   calendar: {
     marginTop: 10,
-    marginBottom: 20,
-    width: 400,
+    marginBottom: 10,
+    width: 380,
     height: 390,
     minHeight: 350,
     borderRadius: 20,
@@ -460,6 +478,19 @@ const styles = StyleSheet.create({
   buttonContainer:{
     flexDirection: 'row',
     gap: 10,
+  },
+  button: {
+
+    backgroundColor: '#6495ED',
+    width: 70,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  
+  listaDiaLocalContainer: {
+    marginTop: 10,
+    height: 150,
   },
 
   optionContainer:{

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform, Linking } from 'react-native';
 import MapView, { Marker, Polyline} from 'react-native-maps';
-import MapViewDirections from 'react-native-maps-directions';
+//import MapViewDirections from 'react-native-maps-directions';
 import { Button } from 'react-native-paper';
-import { Linking } from 'react-native';
 import * as Location from 'expo-location';
 
 
@@ -27,19 +26,23 @@ const MapScreen = ({route}) => {
     latitude: parseFloat(latitud), 
     longitude: parseFloat(longitud)
   });
+  const [destination, setDestination] = useState({
+    latitude: parseFloat(latitud), 
+    longitude: parseFloat(longitud)
+  });
 
   //coordenadas de casa
-  const [destination, setDestination] = useState({
+  /*const [destination, setDestination] = useState({
     latitude: 39.154925, 
     longitude: -0.435294
-  });
+  });*/
 
   const Marines = {
     latitude: 39.674159, 
     longitude: -0.559892
   }
 
- /*useEffect(() => {
+ useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
@@ -52,8 +55,9 @@ const MapScreen = ({route}) => {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude
       });
+      console.log(location);
     })();
-  }, []); */ 
+  }, []);
 
 
   return (
@@ -67,9 +71,10 @@ const MapScreen = ({route}) => {
         <Button
           mode="contained"
           onPress={() => {
-            const url = `http://maps.google.com/maps?saddr=${origin.latitude}, ${origin.longitude}&daddr=${Marines.latitude},${Marines.longitude}`;
+            const url = `http://maps.google.com/maps?saddr=${origin.latitude},${origin.longitude}&daddr=${destination.latitude},${destination.longitude}`;
             Linking.openURL(url);
           }}
+        
           style={{marginTop: 10}}
         >Como llegar</Button>
       </View>
@@ -147,4 +152,27 @@ export default MapScreen
          strokeWidth={3}
          strokeColor="hotpink"
        /> 
+
+       ONPRESS PARA ABRIR GOOGLE MAPS EN DISPOSITIVO
+       se utiliza el esquema de url de google maps (:geo) para abrir la app y poner como destino las coordenadas de la gasolinera NO ABRE MAPS EN MOVIL
+
+         onPress={() => {
+          const url = Platform.select({
+          ios: `http://maps.apple.com/maps?saddr=${origin.latitude},${origin.longitude}&daddr=${Marines.latitude},${Marines.longitude}`,
+          android: `geo:${origin.latitude},${origin.longitude}?q=${Marines.latitude},${Marines.longitude}`
+          });
+
+        Linking.canOpenURL(url).then(supported => {
+          if (supported) {
+            Linking.openURL(url);
+          } else {
+            console.log("No se puede abrir la URL: " + url);
+          }
+        });
+      }}
+      
+          onPress={() => {
+            const url = `http://maps.google.com/maps?saddr=${origin.latitude}, ${origin.longitude}&daddr=${Marines.latitude},${Marines.longitude}`;
+            Linking.openURL(url);
+          }}
       */ }

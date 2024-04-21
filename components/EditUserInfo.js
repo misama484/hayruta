@@ -1,5 +1,5 @@
 import React, { useEffect, useState} from 'react';
-import { Text, StyleSheet, View, Alert } from 'react-native'
+import { Text, StyleSheet, View, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native'
 import { TextInput, Button } from 'react-native-paper';
 
 //FIREBASE
@@ -99,67 +99,68 @@ const EditUserInfo = ({ modal, setOpenModal, correo, setIsUserDataUpdated }) => 
     }
 
   return (
-    <View style = {styles.modalContainer}>
-      <Text
-        style = {{margin: 30, fontSize: 15, fontWeight: 'bold', borderWidth: 1, borderColor: 'black', borderRadius: 10, padding: 10,}}
-      >Editar datos de usuario</Text>    
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}> {/*Evitamos que se desplace la modal al mostrar el teclado */}
+      <ScrollView style = {styles.modalContainer}>
+        <Text
+          style = {{margin: 20, fontSize: 15, fontWeight: 'bold', borderWidth: 1, borderColor: 'black', borderRadius: 10, padding: 10,}}
+        >Editar datos de usuario</Text>    
 
-      <Text>Nombre:</Text>
-      <TextInput 
-        placeholder={nombre}
-        value= {nombreTemp}
-        onChangeText={(value) => setNombreTemp(value)}
-        style={styles.input}
+        <Text>Nombre:</Text>
+        <TextInput 
+          placeholder={nombre}
+          value= {nombreTemp}
+          onChangeText={(value) => setNombreTemp(value)}
+          style={styles.input}
+          />
+        <Text>Apellido:</Text>
+        <TextInput 
+          placeholder={apellido}
+          value={apellidoTemp}
+          onChangeText={(value) => setApellidoTemp(value)}
+          style={styles.input}
         />
-      <Text>Apellido:</Text>
-      <TextInput 
-        placeholder={apellido}
-        value={apellidoTemp}
-        onChangeText={(value) => setApellidoTemp(value)}
-        style={styles.input}
-       />
-      <Text>Nombre de usuario:</Text>
-      <TextInput 
-        placeholder={username}
-        value={usernameTemp}
-        onChangeText={(value) => setUsernameTemp(value)}
-        style={styles.input}
-       />
-      <Text>Población:</Text>
-      <TextInput 
-        placeholder={poblacion}
-        value={poblacionTemp}
-        onChangeText={(value) => setPoblacionTemp(value)}
-        style={styles.input}
+        <Text>Nombre de usuario:</Text>
+        <TextInput 
+          placeholder={username}
+          value={usernameTemp}
+          onChangeText={(value) => setUsernameTemp(value)}
+          style={styles.input}
         />
-               
-      <View style = {styles.buttonModalContainer}>
-        <Button
-          style = {styles.button}
-          onPress={() => handleModal()}
-        >Cerrar</Button>
-            
-        <Button
-          style = {styles.button}
-          title="Guardar cambios"
-          onPress={HandleValues}
-        >Guardar</Button>
-      </View>
-    </View>
+        <Text>Población:</Text>
+        <TextInput 
+          placeholder={poblacion}
+          value={poblacionTemp}
+          onChangeText={(value) => setPoblacionTemp(value)}
+          style={styles.input}
+          />
+          
+        <View style = {styles.buttonModalContainer}>
+          <Button
+            style = {styles.button}
+            onPress={() => handleModal()}
+          >Cerrar</Button>
+              
+          <Button
+            style = {styles.button}
+            title="Guardar cambios"
+            onPress={HandleValues}
+          >Guardar</Button>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   )
 }
 
 const styles = StyleSheet.create({
 
   modalContainer: {
-    //marginTop: 90,
     width: "90%",
-    height: "70%",
-    alignItems: 'center',
-    justifyContent: 'center',
+    //height: "60%",
+    //alignItems: 'center',
+    //justifyContent: 'center',
     alignSelf: 'center',    
     padding: 20,
-    marginTop: 20,
+    //marginTop: 20,
     backgroundColor: '#6495ED',
     borderRadius: 30,
     elevation: 5,
@@ -183,7 +184,8 @@ const styles = StyleSheet.create({
     borderWidth: 1, 
     borderColor: 'black',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    
   },
 
   input: {
