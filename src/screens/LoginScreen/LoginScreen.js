@@ -117,18 +117,18 @@ export default function LoginScreen({ navigation }) {
           <TouchableOpacity
             style={styles.button}
             onPress={() => onLoginPress()}>
-            <Text style={styles.buttonTitle}>Log in</Text>
+            <Text style={styles.buttonTitle}>Iniciar sesion</Text>
           </TouchableOpacity>
           
           <TouchableOpacity
             style={styles.button}
             onPress={() => OnGasInfoPress()}>
-            <Text style={styles.buttonTitle}>GasInfo</Text>
+            <Text style={styles.buttonTitle}>Informacion sobre gasolinieras</Text>
           </TouchableOpacity>
 
           <View style={styles.footerView}>
-            <Text style={styles.footerText}>Don't have an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Sign up</Text></Text>
-            <Text style={styles.footerText}>Reset Password? <Text onPress = {onResetPasswordPress} style={styles.footerLinkPsw}>Click here</Text></Text>
+            <Text style={styles.footerText}>No tienes cuenta? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Registrate</Text></Text>
+            <Text style={styles.footerText}>No recuerdas la contraseña? <Text onPress = {onResetPasswordPress} style={styles.footerLinkPsw}>Click aqui</Text></Text>
           </View>
         </KeyboardAwareScrollView>     
       </View>

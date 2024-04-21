@@ -20,8 +20,8 @@ export default function App() {
         <Stack.Screen name='Login' component={LoginScreen} options={{headerShown: false}}/>
         <Stack.Screen name='Home' component={HomeScreen} options={{title: "Hay Ruta"}} />
         <Stack.Screen name='Registration' component={RegistrationScreen} />
-        <Stack.Screen name='UserInfoScreen' component={UserInfoScreen} options={{title: "Informacion Usuario"}} />    
-        <Stack.Screen name='GasInfoScreen' component={GasInfoScreen} options={{title: "Precios Combustible"}} /> 
+        <Stack.Screen name='UserInfoScreen' component={UserInfoScreen} options={{title: "Informacion del Usuario"}} />    
+        <Stack.Screen name='GasInfoScreen' component={GasInfoScreen} options={{title: "Precios del Combustible"}} /> 
         <Stack.Screen name='MapScreen' component={MapScreen} />   
       </Stack.Navigator>
     </NavigationContainer>
