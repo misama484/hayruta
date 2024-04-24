@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native'
 import {Button, List, TextInput} from 'react-native-paper'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import EditUserInfo from '../../../components/EditUserInfo.js' 
+import EditUserInfo from '../../../components/EditUserInfo.js'
 
 //FIREBASE
 import { doc, getDoc, setDoc, getFirestore, collection, getDocs, query, where } from "firebase/firestore";
@@ -211,7 +211,7 @@ const UserInfoScreen = ({route}) => {
           expanded={menuVisible}
           onPress={menuVisibleHandler}
           left={props => <List.Icon {...props} icon="account" color='black'/>}
-          style = {{backgroundColor: '#6495ED', borderRadius: 10, borderWidth: 2, borderColor: 'black', height: 60, width: 'auto', minWidth: 170}}
+          style = {{backgroundColor: '#6495ED', borderRadius: 10, elevation: 5, height: 60, width: 'auto', minWidth: 170}}
         >
           {users.map((user, index) => (
             <List.Item
@@ -247,7 +247,7 @@ const UserInfoScreen = ({route}) => {
           expanded={menuMesesVisible}
           onPress={menuMesesVisibleHandler}
           left={props => <List.Icon {...props} icon="calendar" color='black'/>}
-          style = {{backgroundColor: '#6495ED', borderRadius: 10, borderWidth: 2, borderColor: 'black', height: 60, width: 'auto', minWidth: 170}}
+          style = {{backgroundColor: '#6495ED', borderRadius: 10,elevation: 5, height: 60, width: 'auto', minWidth: 170}}
         >
           {meses.map((mes, index) => (
             <List.Item
@@ -265,23 +265,7 @@ const UserInfoScreen = ({route}) => {
     )
   };
 
-  //MODAL PARA EDITAR USUARIO
-  const EditUserModal = () => {
-    return (
 
-      <Modal 
-      style = {styles.modalContainer}
-      animationType='slide'
-      visible= {modal}
-      onRequestClose={""}
-      transparent={true}
-
-      >
-        <Text>Modal</Text>
-      </Modal>
-
-    )
-  }
 
   const handleModal = () => {
     setOpenModal(!modal);
@@ -322,48 +306,45 @@ const UserInfoScreen = ({route}) => {
           >
             <Icon name="pencil" size={30} color="black"/>
             <Text>Editar Datos</Text>
-          </TouchableOpacity>
-          
+          </TouchableOpacity>          
         </View>
       </View>
+
       {/* TARJETA USO TOTAL RUTA */}
       <View style = {styles.listContainer}>
         <View style = {styles.list}>
-          <Text>Dias que ha usado ruta: {data.length}</Text>
+          <Text style={{textAlign:"center"}}>Dias que ha usado ruta: {data.length}</Text>
           {data.map((item, index) => (
             <Text key={index}>{item.Fecha}</Text>
           ))}
         </View>
         <View style = {styles.list}>
-          <Text>Dias que ha conducido: {cars.length}</Text>
+          <Text style={{textAlign: "center"}}>Dias que ha conducido: {cars.length}</Text>
             {cars.map((coche, index) => (
               <Text key={index}>{coche.Fecha}</Text>
             ))}
         </View>        
       </View>
+
       {/* TARJETA USO RUTA POR MES */}
       <View style = {{flexDirection: "column", justifyContent:"flex-start", alignItems:"center"}}>        
         <Text style = {{marginVertical: 10}}>Datos de: {mes ? mes : "Elegir mes"}</Text>       
         <View style = {{flexDirection: "row", gap: 20}}>
           <View style = {styles.list}>
-            <Text>Dias de {mes} que ha usado ruta: {usoMesRuta.length}</Text>
+            <Text style={{textAlign:"center"}}>Dias de {mes} que ha usado ruta: {usoMesRuta.length}</Text>
               {usoMesRuta.map((uso, index) => (
                 <Text key={index}>{uso.Fecha}</Text>
               ))}
           </View>
           
           <View style = {styles.list}>          
-            <Text>Dias de {mes} que ha conducido: {usoMesRutaCoche.length}</Text>
+            <Text style = {{textAlign: "center"}}>Dias de {mes} que ha conducido: {usoMesRutaCoche.length}</Text>
               {usoMesRutaCoche.map((uso, index) => (
                 <Text key={index}>{uso.Fecha}</Text>
               ))}
           </View>
         </View>
       </View>
-      
-      
-
-
     </View>
     
   )
@@ -383,12 +364,10 @@ styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
     backgroundColor: '#6495ED',
-    borderWidth: 2,
-    borderColor: 'black',
     borderRadius: 10,
     width: '70%',
     height: '20%',
-    //marginTop: 20,
+    elevation: 5,
   },
 
   text: {
@@ -398,8 +377,6 @@ styles = StyleSheet.create({
 
   listContainer:{
     flexDirection: 'row',
-    //justifyContent: 'center',
-    //alignSelf: 'center',
     gap: 20,
     marginTop: 10,
   },
@@ -407,11 +384,10 @@ styles = StyleSheet.create({
   list: {
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2,
-    borderColor: 'black',
+    elevation: 5,
     borderRadius: 10,
     backgroundColor: '#6495ED',
-    width: '40%',
+    width: '42%',
     minHeight: 100,
   },
 
