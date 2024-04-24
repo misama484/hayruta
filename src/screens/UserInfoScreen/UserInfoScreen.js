@@ -9,7 +9,7 @@ import { doc, getDoc, setDoc, getFirestore, collection, getDocs, query, where } 
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../../firebase/config.js';
 
-
+import { format } from 'date-fns'
 
 
 const app = initializeApp(firebaseConfig);
@@ -38,6 +38,7 @@ const UserInfoScreen = ({route}) => {
     setMenuVisible(!menuVisible);
   }
   const closeMenu = () => setMenuVisible(false);
+  
 
   email = route.params.email;
 
@@ -70,7 +71,17 @@ const UserInfoScreen = ({route}) => {
     return results;
   }
 
+  //USEEFFECT PARA COLOCAR EL MES EN CURSO EN SELECCIONAR MES AL CARGAR LA SCREEN
+  const arrayMeses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
   
+  useEffect(() => {
+    const date = new Date();
+    const month = format(date, 'M');
+    const monthName = format(date, 'MMMM');
+    console.log(month)
+    setMesNumber(month);
+    setMes(arrayMeses[month - 1])  
+  }, []);
 
 
 
@@ -251,6 +262,7 @@ const UserInfoScreen = ({route}) => {
         >
           {meses.map((mes, index) => (
             <List.Item
+              
               key={index}
               title={mes}
               onPress={() => {
