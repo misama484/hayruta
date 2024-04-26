@@ -80,6 +80,19 @@ const EditUserInfo = ({ modal, setOpenModal, correo, setIsUserDataUpdated }) => 
         updateObject.Nombre = newNombre;
         setNombre(newNombre);
 
+        //cambiamos los nombres de los registros de la bd
+        //obtenemos las referencias a las colecciones de la bd
+        const collectionRef = collection(db, 'Ruta');
+
+        //obtenemos los documentos con el nombre antiguo
+        const q = query(collectionRef, where('Nombre', '==', userData.Nombre));
+        const querySnapshot = await getDocs(q);;
+        
+        //actualizamos los nombres de los documentos
+        querySnapshot.forEach((doc) => {
+          updateDoc(doc.ref, {Nombre: newNombre});
+        });
+      
 
       }
       if(NewApellido) updateObject.Apellido = NewApellido;
