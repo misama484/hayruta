@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Modal, FlatList } from 'react-native'
 import {Button, List, TextInput} from 'react-native-paper'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import EditUserInfo from '../../../components/EditUserInfo.js'
@@ -73,7 +73,7 @@ const UserInfoScreen = ({route}) => {
 
   //USEEFFECT PARA COLOCAR EL MES EN CURSO EN SELECCIONAR MES AL CARGAR LA SCREEN
   const arrayMeses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-  
+
   useEffect(() => {
     const date = new Date();
     const month = format(date, 'M');
@@ -326,15 +326,19 @@ const UserInfoScreen = ({route}) => {
       <View style = {styles.listContainer}>
         <View style = {styles.list}>
           <Text style={{textAlign:"center"}}>Dias que ha usado ruta: {data.length}</Text>
-          {data.map((item, index) => (
-            <Text key={index}>{item.Fecha}</Text>
-          ))}
+          <FlatList 
+            data={data}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (<Text>{item.Fecha}</Text>)}
+          />
         </View>
         <View style = {styles.list}>
           <Text style={{textAlign: "center"}}>Dias que ha conducido: {cars.length}</Text>
-            {cars.map((coche, index) => (
-              <Text key={index}>{coche.Fecha}</Text>
-            ))}
+          <FlatList
+            data = {cars}
+            keyExtractor={(index) => index.toString()}
+            renderItem={({ item }) => (<Text>{item.Fecha}</Text>)}
+          />
         </View>        
       </View>
 
@@ -344,16 +348,20 @@ const UserInfoScreen = ({route}) => {
         <View style = {{flexDirection: "row", gap: 20}}>
           <View style = {styles.list}>
             <Text style={{textAlign:"center"}}>Dias de {mes} que ha usado ruta: {usoMesRuta.length}</Text>
-              {usoMesRuta.map((uso, index) => (
-                <Text key={index}>{uso.Fecha}</Text>
-              ))}
+            <FlatList
+              data = {usoMesRuta}
+              keyExtractor={(index) => index.toString()}
+              renderItem={({ item }) => (<Text>{item.Fecha}</Text>)}
+            />
           </View>
           
           <View style = {styles.list}>          
             <Text style = {{textAlign: "center"}}>Dias de {mes} que ha conducido: {usoMesRutaCoche.length}</Text>
-              {usoMesRutaCoche.map((uso, index) => (
-                <Text key={index}>{uso.Fecha}</Text>
-              ))}
+            <FlatList
+              data = {usoMesRutaCoche}
+              keyExtractor={(index) => index.toString()}
+              renderItem={({ item }) => (<Text>{item.Fecha}</Text>)}
+            />
           </View>
         </View>
       </View>
@@ -401,6 +409,8 @@ styles = StyleSheet.create({
     backgroundColor: '#6495ED',
     width: '42%',
     minHeight: 100,
+    maxHeight: 180,
+    overflow: 'hidden',
   },
 
   modalContainer: {
