@@ -85,6 +85,8 @@ const UserInfoScreen = ({route}) => {
 
 
 
+
+
   const fetchName = async (email) => {
     const name = await getName(email);
     setNombre(name);
@@ -336,7 +338,7 @@ const UserInfoScreen = ({route}) => {
           <Text style={{textAlign: "center"}}>Dias que ha conducido: {cars.length}</Text>
           <FlatList
             data = {cars}
-            keyExtractor={(index) => index.toString()}
+            keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (<Text>{item.Fecha}</Text>)}
           />
         </View>        
@@ -350,7 +352,7 @@ const UserInfoScreen = ({route}) => {
             <Text style={{textAlign:"center"}}>Dias de {mes} que ha usado ruta: {usoMesRuta.length}</Text>
             <FlatList
               data = {usoMesRuta}
-              keyExtractor={(index) => index.toString()}
+              keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (<Text>{item.Fecha}</Text>)}
             />
           </View>
@@ -359,7 +361,7 @@ const UserInfoScreen = ({route}) => {
             <Text style = {{textAlign: "center"}}>Dias de {mes} que ha conducido: {usoMesRutaCoche.length}</Text>
             <FlatList
               data = {usoMesRutaCoche}
-              keyExtractor={(index) => index.toString()}
+              keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (<Text>{item.Fecha}</Text>)}
             />
           </View>

@@ -55,6 +55,10 @@ const EditUserInfo = ({ modal, setOpenModal, correo, setIsUserDataUpdated }) => 
   }
   ,[])
 
+    //TODO ERROR, AL CAMBIAR EL NOMBRE DE USUARIO, DESAPARECE EL LOG DE RUTA, SOLUCIONAR CONSULTANDO POR ID DE USUARIO, AGREGAR UN ID AL USUARIO O UTILIZAR EL DE FIREBASE O MODIFICANDO TODOS LOS REGISTROS DE LA APP Y CAMBIANDO EL NOMBRE. A LA LARGA NO SERIA EFICIENTE. AGREGAR ID AL USUARIO Y VINCULAR TABLAS?
+
+    //TODO PROBAMOS CAMBIANDO TODOS LOS REGISTROSD E LA BASE DE DATOS
+
   //FUNCION PARA ACTUALIZAR DATOS DE USUARIO
   //comprobar si hay modificacion en los datos
   //si la hay, actualizar datos
@@ -75,6 +79,8 @@ const EditUserInfo = ({ modal, setOpenModal, correo, setIsUserDataUpdated }) => 
       if(newNombre !== "") {
         updateObject.Nombre = newNombre;
         setNombre(newNombre);
+
+
       }
       if(NewApellido) updateObject.Apellido = NewApellido;
       if(newUsername) updateObject.Nombre_Usuario = newUsername;
