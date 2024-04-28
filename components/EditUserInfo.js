@@ -55,11 +55,46 @@ const EditUserInfo = ({ modal, setOpenModal, correo, setIsUserDataUpdated }) => 
   }
   ,[])
 
-    //TODO ERROR, AL CAMBIAR EL NOMBRE DE USUARIO, DESAPARECE EL LOG DE RUTA, SOLUCIONAR CONSULTANDO POR ID DE USUARIO, AGREGAR UN ID AL USUARIO O UTILIZAR EL DE FIREBASE O MODIFICANDO TODOS LOS REGISTROS DE LA APP Y CAMBIANDO EL NOMBRE. A LA LARGA NO SERIA EFICIENTE. AGREGAR ID AL USUARIO Y VINCULAR TABLAS?
+  //METODO QUE CAMBIA TODOS LOS REGISTROS DE LA BASE DE DATOS QUE TENGAN EL MISMO NOMBRE.
+  //ESTO NO ES EFICIENTE, PERO ES UNA SOLUCION TEMPORAL PARA EL PROBLEMA DE CAMBIO DE NOMBRE DE USUARIO
+  //en futuras actualizaciones cambiar colecciones incluyendo un id de usuario y vincularlo a la tabra rutas.
 
-    //TODO PROBAMOS CAMBIANDO TODOS LOS REGISTROSD E LA BASE DE DATOS
+  const updateNameInCollections = async (oldName, newName) => {
+    //obtenemos la coleccion de rutas
+    const collectionRef = collection(db, 'Ruta');
 
-  //FUNCION PARA ACTUALIZAR DATOS DE USUARIO
+    //obtenemos los documentos de la coleccion
+    const querySnapshot = await getDocs(collectionRef);
+    
+    //iteramos y por cada documento: 
+    querySnapshot.forEach((doc) => {
+      //console.log(doc.data + " desde updateNames")
+      //asignamos el contenido de cada documento a una variable
+      const data = doc.data();
+      //comprobamos que oldname existe en los arrays de los documentos
+      //console.log(data.Fecha + " desde updateNames")
+
+      const cochesList = data.Coches;
+      //cochesList.forEach(element => { /*console.log(element + " desde cochesList")*/ });
+
+      const cochesIndex = data.Coches.indexOf(oldName);
+      const usuariosIndex = data.Usuarios.indexOf(oldName);
+
+      //comprobamos que esta en el array y lo cambiamos por newName
+      if(cochesIndex !== -1){
+        data.Coches[cochesIndex] = newName;
+      }
+      if(usuariosIndex!== -1){
+        data.Usuarios[usuariosIndex] = newName;
+      } 
+
+      updateDoc(doc.ref, { Coches: data.Coches, Usuarios: data.Usuarios });
+
+    });
+
+  }
+
+  //FUNCION PARA ACTUALIZAR DATOS DE USUARIO -- CUANDO CAMBIA EL NOMBRE, SE ACTUALIZA EN TODAS LAS COLECCIONES
   //comprobar si hay modificacion en los datos
   //si la hay, actualizar datos
   const updateUser = async (email, newNombre, NewApellido, newUsername, newPoblacion) => {
@@ -71,35 +106,25 @@ const EditUserInfo = ({ modal, setOpenModal, correo, setIsUserDataUpdated }) => 
     
       if( !userSnap.empty){
       const doc = userSnap.docs[0];
-      const userData = doc.data();
-      
+      const userData = doc.data();      
 
       // Crea un objeto de actualizacion que solo recibe los campos que han sido modificados. (que contengan datos)
       let updateObject = {};
       if(newNombre !== "") {
         updateObject.Nombre = newNombre;
-        setNombre(newNombre);
-
-        //cambiamos los nombres de los registros de la bd
-        //obtenemos las referencias a las colecciones de la bd
-        const collectionRef = collection(db, 'Ruta');
-
-        //obtenemos los documentos con el nombre antiguo
-        const q = query(collectionRef, where('Nombre', '==', userData.Nombre));
-        const querySnapshot = await getDocs(q);;
-        
-        //actualizamos los nombres de los documentos
-        querySnapshot.forEach((doc) => {
-          updateDoc(doc.ref, {Nombre: newNombre});
-        });
-      
-
+        setNombre(newNombre);     
       }
       if(NewApellido) updateObject.Apellido = NewApellido;
       if(newUsername) updateObject.Nombre_Usuario = newUsername;
       if(newPoblacion) updateObject.Poblacion = newPoblacion;
       //actualizamos con el objeto de actualizacion
       await updateDoc(doc.ref, updateObject);
+
+      //actualizamos el nombre de usuario en todas las colecciones que lo requieran
+      if(newNombre !== userData.Nombre){
+        updateNameInCollections(userData.Nombre, newNombre);
+      }
+
       //mostramos  mensaje de confirmacion
       let updatedFields = Object.entries(updateObject).map(([key, value]) => `${key}: ${value}`).join(', ');
       Alert.alert('Datos actualizados', `Los siguientes campos ${updatedFields} han sido actualizados correctamente`);
