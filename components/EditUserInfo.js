@@ -68,15 +68,11 @@ const EditUserInfo = ({ modal, setOpenModal, correo, setIsUserDataUpdated }) => 
     
     //iteramos y por cada documento: 
     querySnapshot.forEach((doc) => {
-      //console.log(doc.data + " desde updateNames")
+      
       //asignamos el contenido de cada documento a una variable
       const data = doc.data();
+      
       //comprobamos que oldname existe en los arrays de los documentos
-      //console.log(data.Fecha + " desde updateNames")
-
-      const cochesList = data.Coches;
-      //cochesList.forEach(element => { /*console.log(element + " desde cochesList")*/ });
-
       const cochesIndex = data.Coches.indexOf(oldName);
       const usuariosIndex = data.Usuarios.indexOf(oldName);
 
