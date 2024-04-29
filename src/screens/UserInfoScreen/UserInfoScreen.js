@@ -57,6 +57,7 @@ const UserInfoScreen = ({route}) => {
     });
     return userName;
   }
+
   //OBTENEMOS LISTA DE USUSARIOS PARA EL DESPLEGABLE DE SELECCION DE USUARIOS
   const getUsers = async () => {
     const users = collection(db, 'Users');
@@ -101,7 +102,7 @@ const UserInfoScreen = ({route}) => {
     const fetchUserData = async () => {
       const name = await getName(email);
       const users = await getUsers();
-      setUserData({name, users});
+      //setUserData({name, users});
     }
     fetchUserData();
   }, [isUserDataUpdated]);
@@ -309,8 +310,8 @@ const UserInfoScreen = ({route}) => {
       {/* TARJETA INFO USUARIO */}
       <View style = {styles.headerContainer}>
         <Text style = {styles.text}>Informacion del usuario</Text>
-        <Text>Nombre: {nombre}</Text>
-        <Text>Email: {correo}</Text>
+        <Text>Nombre: {nombre} </Text>
+        <Text>Email: {correo} </Text>
         <View style = {{flexDirection: 'row', gap: 10}}>
           <TouchableOpacity 
           //dependiendo si es el usuario logueado o no, se habilita o no el boton de editar informacion
@@ -325,7 +326,7 @@ const UserInfoScreen = ({route}) => {
       </View>
 
       {/* TARJETA USO TOTAL RUTA */}
-      <View style = {styles.listContainer}>
+      <View style = {styles.listContainer}>        
         <View style = {styles.list}>
           <Text style={{textAlign:"center"}}>Dias que ha usado ruta: {data.length}</Text>
           <FlatList 
