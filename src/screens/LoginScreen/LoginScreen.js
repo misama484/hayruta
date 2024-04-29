@@ -3,13 +3,12 @@ import { Image, Text, TextInput, TouchableOpacity, View, StyleSheet, Alert, Touc
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 //FIREEBASE
-import { getAuth, signInWithEmailAndPassword, auth, sendPasswordResetEmail } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../../firebase/config.js';
 import { collection, getDocs, getFirestore, query, where } from "firebase/firestore";
 
-//NAVIGATION
-//import { useNavigation } from '@react-navigation/native';
+import { app, auth } from '../../firebase/config.js';
 
 
 export default function LoginScreen({ navigation }) {
@@ -19,8 +18,6 @@ export default function LoginScreen({ navigation }) {
   const [name, setName] = useState('');
  
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
   const db = getFirestore(app);
 
   //Acceder a la bd y a traves de email, obtener datos de usuario
@@ -49,10 +46,9 @@ export default function LoginScreen({ navigation }) {
   };
 
   //para evitar errores convertimos el email a minusculas y eliminamos espacios en blanco.
-
-  //TODO anyadimos validacion de que lleve la @ y el .
   const formatEmail = (email) => {
-    const emailFormatted = email.trim().toLowerCase();    
+    const emailFormatted = email.trim().toLowerCase();
+    
     setEmail(emailFormatted);    
   };
   

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Image, Text, TextInput, TouchableOpacity, View, StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native'
+import { Image, Text, TextInput, TouchableOpacity, View, StyleSheet, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 //FIREBASE  
@@ -49,11 +49,17 @@ export default function RegistrationScreen({ navigation }) {
       const errorMessage = error.message;      
     });
   }
-
+  //TODO anyadimos validacion de que lleve la y validamos que las 2 password sean iguales
   const formatEmail = (email) => {
     const emailFormatted = email.trim().toLowerCase();
     setEmail(emailFormatted);
+    /*if(email.includes('@')) {
+      setEmail(formatEmail(email));
+    } else {
+      Alert("error", "Email no valido")
+    }*/
   };
+
   
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -106,6 +112,7 @@ export default function RegistrationScreen({ navigation }) {
             placeholder="Email"
             placeholderTextColor="#aaa"
             onChangeText={(text) => formatEmail(text)}
+            //onBlur={(text) => formatEmail(email)}
             value={email}
             underlineColorAndroid="transparent"
             autoCapitalize="none"
@@ -165,7 +172,6 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: 5,
     overflow: 'hidden',
-    backgroundColor: ' ',
     borderWidth: 1,
     borderColor: '#6495ED',
     marginTop: 10,
