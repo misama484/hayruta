@@ -8,6 +8,7 @@ import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../../firebase/config.js';
 import { getFirestore, doc, setDoc, collection, addDoc } from 'firebase/firestore';
 
+import { app, auth } from '../../firebase/config.js';
 
 
 export default function RegistrationScreen({ navigation }) {
@@ -23,8 +24,8 @@ export default function RegistrationScreen({ navigation }) {
     navigation.navigate('Login')
   }
   
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+  //const app = initializeApp(firebaseConfig);
+  //const auth = getAuth(app);
   const db = getFirestore(app);
 
   //enviamos datos a bd para almacenar nuevo usuario
@@ -40,6 +41,10 @@ export default function RegistrationScreen({ navigation }) {
   }
 
   const onRegisterPress = () => {
+   if(!validateEmail(email) || !validatePassword()) { 
+    Alert.alert("Error", "Email no valido o contraseñas no coinciden");
+    return; 
+  }
     createUserWithEmailAndPassword(auth, email, password, apellido, nombre, userName, poblacion)
     .then(() => {
       addUserBd(apellido, nombre, userName, poblacion, email)      
@@ -59,6 +64,24 @@ export default function RegistrationScreen({ navigation }) {
       Alert("error", "Email no valido")
     }*/
   };
+
+  //validacion de @ en email
+  const validateEmail = (email) => {
+    if(email.includes('@')) {
+      return true;
+    } else { 
+      return false;
+    }
+  }
+
+  //validacion de password
+  const validatePassword = () => {
+    if(password === confirmPassword) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   
   return (
