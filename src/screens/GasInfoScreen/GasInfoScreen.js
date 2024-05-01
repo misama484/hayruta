@@ -114,11 +114,11 @@ const GasInfoScreen = () => {
             expanded={visible}
             onPress={visibleHandler}
             left={props => <List.Icon {...props} icon="city-variant-outline" color='black'/>}
-            style = {{backgroundColor: '#6495ED', borderRadius: 10, borderWidth: 2, borderColor: 'black', height: 60, width: 'auto', minWidth: 250}}
+            style = {{backgroundColor: '#6495ED', borderRadius: 10, height: 60, width: 'auto', minWidth: 250}}
           >
             {filteredProvincias.map((provincia, index) => (
               <List.Item
-                style = {{padding: 10, fontSize: 18, backgroundColor: "#6495ED", borderWidth: 1, borderColor: "black", borderRadius: 10, margin: 5,}}
+                style = {{padding: 10, fontSize: 18, backgroundColor: "#6495ED", borderRadius: 10, margin: 5,}}
                 key={index}
                 title={provincia.Provincia}
                 onPress={() => {
@@ -166,11 +166,11 @@ const GasInfoScreen = () => {
             expanded={visible}
             onPress={visibleHandler}
             left={props => <List.Icon {...props} icon="bank" color='black'/>}
-            style = {{backgroundColor: '#6495ED', borderRadius: 10, borderWidth: 2, borderColor: 'black', height: 60, width: 'auto', minWidth: 250}}
+            style = {{backgroundColor: '#6495ED', borderRadius: 10, height: 60, width: 'auto', minWidth: 250}}
           >
             {filteredPoblaciones.map((poblacion, index) => (
               <List.Item
-                style = {{padding: 10, fontSize: 18, backgroundColor: "#6495ED", borderWidth: 1, borderColor: "black", borderRadius: 10, margin: 5,}}
+                style = {{padding: 10, fontSize: 18, backgroundColor: "#6495ED", borderRadius: 10, margin: 5,}}
                 key={index}
                 title={poblacion.Municipio}
                 onPress={() => {
@@ -203,10 +203,10 @@ const GasInfoScreen = () => {
 
     return (
       <FlatList
-        style = {{maxHeight: 360, minHeight: 100, marginTop: 30, marginBottom: 20, marginHorizontal: 2, borderWidth: 2, borderColor: "black", borderRadius: 10, backgroundColor: "#6495ED"}}
+        style = {{maxHeight: 360, minHeight: 100, marginTop: 30, marginBottom: 20, marginHorizontal: 2, borderRadius: 10, backgroundColor: "#6495ED"}}
         data = {gasolineras}
         renderItem = {({item}) => (
-          <View style = {{padding: 10, fontSize: 18, backgroundColor: "lightgray", borderWidth: 1, borderColor: "black", borderRadius: 10, margin: 5, flexDirection: "row", justifyContent:"space-around", alignItems: "center"}}>
+          <View style = {{padding: 10, fontSize: 18, backgroundColor: "lightgray", borderRadius: 10, margin: 5, flexDirection: "row", justifyContent:"space-around", alignItems: "center"}}>
             <View>
               
               <Text >
@@ -259,8 +259,6 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: 'darkred',
-    borderWidth: 1,
-    borderColor: 'black',
     marginLeft: 30,
     marginRight: 30,
     //marginTop: 20,
@@ -272,8 +270,6 @@ const styles = StyleSheet.create({
   },
   textInputProvincia: {
     height: 40,
-    borderColor: 'white',
-    borderWidth: 2,
     marginVertical: 10,
     padding: 10,
     borderRadius: 10,
