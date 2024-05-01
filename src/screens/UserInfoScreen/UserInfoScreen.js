@@ -79,7 +79,6 @@ const UserInfoScreen = ({route}) => {
     const date = new Date();
     const month = format(date, 'M');
     const monthName = format(date, 'MMMM');
-    console.log(month)
     setMesNumber(month);
     setMes(arrayMeses[month - 1])  
   }, []);

@@ -68,11 +68,17 @@ export default function HomeScreen({route, navigation}) {
     }, [fetchName])    
   )
 
-  
+  //TODO   AGREGAR FUNCION PARA QUE CUANDO NO HAYA FECHA SELECCIONADA, SALTE UNA ALERTA PARA QUE SELECCIONE UNA FECHA.
  //FUNCION PARA AÑADIR USUARIO A LA RUTA
 
   const addDocUsers = async (fecha, nombre) => {
-    const fecha1 = fecha.currentDay;
+    //const fecha1 = fecha.currentDay;
+    if(currentDay === ""){
+      console.log(currentDay)
+      Alert.alert("Atencion", "No hay fecha seleccionada");
+      return;
+    }
+    console.log(currentDay + " currentDay")
     const ruta = collection(db, 'Ruta');
     const docRef = doc(db, "Ruta", fecha1);
     //obtenemos los datos de la bd
@@ -106,6 +112,11 @@ export default function HomeScreen({route, navigation}) {
 
   const addDoc = async (fecha, nombre) => {
     const fecha1 = fecha.currentDay;
+    if(currentDay === ""){
+      Alert.alert("Atencion","No hay fecha seleccionada");
+      return;
+    }
+    
     const ruta = collection(db, 'Ruta');
     const docRef = doc(db, "Ruta", fecha1);
     //obtenemos los datos de la bd
@@ -196,29 +207,25 @@ export default function HomeScreen({route, navigation}) {
 
     return(
       <>
-        
-          <View style = {{flexDirection: "row", justifyContent: "space-around", backgroundColor: "#6495ED", borderRadius: 20}}>            
-            <View>
-              <Text style= {{fontSize: 18}}>Usuarios</Text>
-              <FlatList
-              
-                        
+        <View style = {{flexDirection: "row", justifyContent: "space-around", backgroundColor: "#6495ED", borderRadius: 20}}>            
+          <View>
+            <Text style= {{fontSize: 18}}>Usuarios</Text>
+            <FlatList         
               data = {usuarios}              
               renderItem = {({item}) => (
                 <Text>{item}</Text>
               )}
               keyExtractor = {item => item}
-              />
+            />
             </View>
             <View>
               <Text style= {{fontSize: 18}}>Coches</Text>
               <FlatList
-              
-              data = {coches}
-              renderItem = {({item}) => (
-                <Text>{item}</Text>
-              )}
-              keyExtractor = {item => item}
+                data = {coches}
+                renderItem = {({item}) => (
+                  <Text>{item}</Text>
+                )}
+                keyExtractor = {item => item}
               />
             </View>
           </View>

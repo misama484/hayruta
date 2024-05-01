@@ -45,7 +45,6 @@ const MapScreen = ({route}) => {
         latitude: parseFloat(latitud),
         longitude: parseFloat(longitud)
       })
-      console.log(location);
     })();
   }, []);
 
