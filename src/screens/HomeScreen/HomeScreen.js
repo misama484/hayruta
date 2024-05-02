@@ -26,6 +26,7 @@ export default function HomeScreen({route, navigation}) {
   const [usuarios, setUsuarios] = useState([]);
   const [coches, setCoches] = useState([]);
   const [nombre, setNombre] = useState('');
+  const [usuario, setUsuario] = useState('')
   const [selectedMoth, setSelectedMonth] = useState('');
   //estado para actualizar la lista de usuarios y coches, cuando se realize algun cambio, cambiara el estado y ese cambio, atraves de useEffect, actualizara la lista
   const [updateList, setUpdateList] = useState(false);
@@ -305,7 +306,7 @@ export default function HomeScreen({route, navigation}) {
      <View style = {styles.header}>        
         <View style = {styles.bloqueFecha}>
           <Text>Email: {email} </Text>
-          <Text>Nombre: {nombre} </Text> 
+          <Text>Usuario: {nombre} </Text> 
           <Text>Fecha actual: {fechaActual}</Text>
           <Text>Fecha seleccionada: {currentDay}</Text>
         </View>
