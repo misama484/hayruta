@@ -19,6 +19,7 @@ const db = getFirestore(app);
 
 const UserInfoScreen = ({route}) => {
   const [ nombre, setNombre ] = useState('')
+  const [usuario, setUsuario] = useState('')
   const [ data, setData ] = useState([])
   const [ cars, setCars ] = useState([])
   const [menuVisible, setMenuVisible] = useState(false);
@@ -57,6 +58,20 @@ const UserInfoScreen = ({route}) => {
     });
     return userName;
   }
+  //OBTENER UserName (todo esto deberia ir en un archivo aparte, pero por ahora lo dejo aqui para pruebas)
+  const getUserName = async (email) => {
+    const users = collection(db, 'Users');
+    const q = query(users, where('email', '==', email))
+    let userName = '';
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      //extraemos el nombre de la bd y lo pasamos como return
+      userName = data.Nombre_Usuario      
+    });
+    return userName;
+  }
 
   //OBTENEMOS LISTA DE USUSARIOS PARA EL DESPLEGABLE DE SELECCION DE USUARIOS
   const getUsers = async () => {
@@ -67,7 +82,7 @@ const UserInfoScreen = ({route}) => {
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      results.push({nombre: data.Nombre, email: data.email});      
+      results.push({nombre: data.Nombre_Usuario, email: data.email});      
     });
     return results;
   }
@@ -83,12 +98,10 @@ const UserInfoScreen = ({route}) => {
     setMes(arrayMeses[month - 1])  
   }, []);
 
-
-
-
-
   const fetchName = async (email) => {
     const name = await getName(email);
+    const userName = await getUserName(email);
+    setUsuario(userName)
     setNombre(name);
     setCorreo(email);
   }
@@ -220,7 +233,7 @@ const UserInfoScreen = ({route}) => {
 
       <List.Section title='Seleccione Usuario'>
         <List.Accordion
-          title={nombre}
+          title={usuario}
           expanded={menuVisible}
           onPress={menuVisibleHandler}
           left={props => <List.Icon {...props} icon="account" color='black'/>}
@@ -310,6 +323,7 @@ const UserInfoScreen = ({route}) => {
       <View style = {styles.headerContainer}>
         <Text style = {styles.text}>Informacion del usuario</Text>
         <Text>Nombre: {nombre} </Text>
+        <Text>Nombre Usuario: {usuario} </Text>
         <Text>Email: {correo} </Text>
         <View style = {{flexDirection: 'row', gap: 10}}>
           <TouchableOpacity 
