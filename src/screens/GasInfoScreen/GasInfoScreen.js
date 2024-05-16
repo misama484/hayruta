@@ -219,7 +219,7 @@ const GasInfoScreen = () => {
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => OnMapButtonPress(item)}>
-                <Text style={styles.buttonTitle}> Go to Map</Text>
+                <Text style={styles.buttonTitle}> Mostrar mapa</Text>
               </TouchableOpacity>
             </View>
           </View>
