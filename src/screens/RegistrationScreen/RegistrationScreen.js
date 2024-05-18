@@ -6,7 +6,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../../firebase/config.js';
-import { getFirestore, doc, setDoc, collection, addDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, collection, addDoc, getDocs } from 'firebase/firestore';
 
 import { app, auth } from '../../firebase/config.js';
 
@@ -29,8 +29,7 @@ export default function RegistrationScreen({ navigation }) {
   const db = getFirestore(app);
 
   //enviamos datos a bd para almacenar nuevo usuario
-  const addUserBd = async(apellido, nombre, userName, poblacion, email)=>{
-    
+  const addUserBd = async(apellido, nombre, userName, poblacion, email)=>{      
     const newUser = await addDoc(collection(db, "Users"), {
       "Apellido": apellido,
       "Nombre": nombre,
@@ -40,29 +39,42 @@ export default function RegistrationScreen({ navigation }) {
     });    
   }
 
-  const onRegisterPress = () => {
-   if(!validateEmail(email) || !validatePassword()) { 
-    Alert.alert("Error", "Email no valido o contraseñas no coinciden");
-    return; 
+  //comprobar que el nombre de usuario no existe en la bd
+  const checkUserName = async(userName) => {
+    const collectionName = collection(db, "Users");
+     const querySnapshot = await getDocs(collectionName);
+     querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      if(data.Nombre_Usuario === userName) {
+        Alert.alert("Error", "El nombre de usuario ya existe");
+        return;
+      }
+     });
   }
+
+  const onRegisterPress = () => {
+    if(!validateEmail(email) || !validatePassword()) { 
+      Alert.alert("Error", "Email no valido o contraseñas no coinciden");
+      return; 
+    }
+    //colocar aqui la validacion de username,para que no cree la cuenta
+    //MODIFICAR LAS REGLAS DE FIREBVASE PARA QUE DEJE LEER LA TABLA USERS SIN ESTAR LOGUEADO, SOLO LECTURA
+    checkUserName(userName);
     createUserWithEmailAndPassword(auth, email, password, apellido, nombre, userName, poblacion)
     .then(() => {
       addUserBd(apellido, nombre, userName, poblacion, email)      
       navigation.navigate('Login');
     })
     .catch((error) => {
-      const errorMessage = error.message;      
+      const errorMessage = error.message;
+      Alert.alert("Error", errorMessage);      
     });
   }
-  //TODO anyadimos validacion de que lleve la y validamos que las 2 password sean iguales
+
+
   const formatEmail = (email) => {
     const emailFormatted = email.trim().toLowerCase();
     setEmail(emailFormatted);
-    /*if(email.includes('@')) {
-      setEmail(formatEmail(email));
-    } else {
-      Alert("error", "Email no valido")
-    }*/
   };
 
   //validacion de @ en email

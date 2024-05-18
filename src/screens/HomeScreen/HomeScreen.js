@@ -26,6 +26,7 @@ export default function HomeScreen({route, navigation}) {
   const [usuarios, setUsuarios] = useState([]);
   const [coches, setCoches] = useState([]);
   const [nombre, setNombre] = useState('');
+  const [usuario, setUsuario] = useState('')
   const [selectedMoth, setSelectedMonth] = useState('');
   //estado para actualizar la lista de usuarios y coches, cuando se realize algun cambio, cambiara el estado y ese cambio, atraves de useEffect, actualizara la lista
   const [updateList, setUpdateList] = useState(false);
@@ -52,12 +53,30 @@ export default function HomeScreen({route, navigation}) {
     });
     return userName;
   }
+  //funcion para obtener el userName
+  const getUserName = async() => {
+    const users = collection(db, 'Users');
+    const q = query(users, where('email', '==', email))
+    let userName = '';
+    
+    //Obtenemos los datos
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      //extraemos el nombre de la bd y lo pasamos como return
+      userName = data.Nombre_Usuario
+      setUsuario(userName)            
+    });
+    return userName;
+  }
 
   const email = route.params.email;
   //como el nombre es una promesa, no se puede pasar directamente a setNombre
   const fetchName = async (email) => {
     const name = await getName(email);
+    const userName = await getUserName(email);
     setNombre(name);
+    setUsuario(userName)
   }
   fetchName(email);
   
@@ -305,7 +324,7 @@ export default function HomeScreen({route, navigation}) {
      <View style = {styles.header}>        
         <View style = {styles.bloqueFecha}>
           <Text>Email: {email} </Text>
-          <Text>Nombre: {nombre} </Text> 
+          <Text>Usuario: {usuario} </Text> 
           <Text>Fecha actual: {fechaActual}</Text>
           <Text>Fecha seleccionada: {currentDay}</Text>
         </View>
