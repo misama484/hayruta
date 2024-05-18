@@ -87,10 +87,10 @@ export default function HomeScreen({route, navigation}) {
     }, [fetchName])    
   )
 
-  //TODO   AGREGAR FUNCION PARA QUE CUANDO NO HAYA FECHA SELECCIONADA, SALTE UNA ALERTA PARA QUE SELECCIONE UNA FECHA.
+
  //FUNCION PARA AÑADIR USUARIO A LA RUTA
 
-  const addDocUsers = async (fecha, nombre) => {
+  const addDocUsers = async (fecha, usuario) => {
     //const fecha1 = fecha.currentDay;
     if(currentDay === ""){
       console.log(currentDay)
@@ -110,32 +110,28 @@ export default function HomeScreen({route, navigation}) {
       //Coches = docSnap.data().Coches;
     }
     //COMPROBAR QUE EL NOMBRE NO EXISTE EN BD
-    if(Usuarios.includes(nombre)){
+    if(Usuarios.includes(usuario)){
       Alert.alert("Atencion", "El usuario ya esta en la lista");
       return;
     }
     else{
       //añadimos el nombre a las variables
-      Usuarios.push(nombre);
+      Usuarios.push(usuario);
     }
     //añadimos los datos a la bd
     await setDoc(docRef, {
       Fecha: fecha1,
       Usuarios: Usuarios
     }, {merge: true});
-    Alert.alert("Usuario añadido", nombre);
+    Alert.alert("Usuario añadido", usuario);
     setUpdateList(!updateList);
   };
 
   //FUNCION PARA AÑADIR CONDUCTOR A LA RUTA
 
-  const addDoc = async (fecha, nombre) => {
+  const addDoc = async (fecha, usuario) => {
     const fecha1 = fecha.currentDay;
-    if(currentDay === ""){
-      Alert.alert("Atencion","No hay fecha seleccionada");
-      return;
-    }
-    
+        
     const ruta = collection(db, 'Ruta');
     const docRef = doc(db, "Ruta", fecha1);
     //obtenemos los datos de la bd
@@ -149,21 +145,21 @@ export default function HomeScreen({route, navigation}) {
       Coches = docSnap.data().Coches;
     }
 
-    if(Usuarios.includes(nombre)){
+    if(Usuarios.includes(usuario)){
       Alert.alert("Atencion", "El usuario ya esta en la lista");
       return;
     }
     else{
       //añadimos el nombre a las variables
-      Usuarios.push(nombre);
+      Usuarios.push(usuario);
     }
-    if(Coches.includes(nombre)){
+    if(Coches.includes(usuario)){
       Alert.alert("Atencion", "El conductor ya esta en la lista");
       return;
     }
     else{
       //añadimos el nombre a las variables
-      Coches.push(nombre);
+      Coches.push(usuario);
     }
     
     //añadimos los datos a la bd
@@ -173,7 +169,7 @@ export default function HomeScreen({route, navigation}) {
       Coches: Coches,
       Usuarios: Usuarios
     }, {merge: true});
-    Alert.alert("Usuario y conductor añadidos", nombre)
+    Alert.alert("Usuario y conductor añadidos", usuario)
     setUpdateList(!updateList);
   };
   
@@ -373,6 +369,10 @@ export default function HomeScreen({route, navigation}) {
             style = {{backgroundColor: '#6495ED'}}
             onPress={() => {
               //enviar a bd la fecha, el usuario y si coge coche
+              if(currentDay === ""){
+                Alert.alert("Atencion","No hay fecha seleccionada");
+                return;
+              }
               setOpenModal(!modal);
             }}          
           >Añadir Usuario</Button>
@@ -402,7 +402,7 @@ export default function HomeScreen({route, navigation}) {
     >
       <View style = {styles.modalContainer}>
         <Text>Fecha: {currentDay}</Text>
-        <Text>Usuario: {nombre}</Text>
+        <Text>Usuario: {usuario}</Text>
         <View style = {styles.optionContainer}>
           <Text style = {{textAlignVertical: 'center'}}>Trabaja</Text>
             <Switch value={switchedWork} onValueChange={(value) => {
@@ -423,11 +423,11 @@ export default function HomeScreen({route, navigation}) {
               onPress={() => {
                 //enviar a bd la fecha, el usuario y si coge coche
                 {switchedWork && !switchedCar ? 
-                  addDocUsers({currentDay}, nombre)
+                  addDocUsers({currentDay}, usuario)
                   : null
                 }
                 {switchedCar && switchedWork ?
-                addDoc({currentDay}, nombre) : null}
+                addDoc({currentDay}, usuario) : null}
                 //cambiar un estado para ejecutar useEffect y actualizar lista                
                 setOpenModal(!modal);
               }}          
