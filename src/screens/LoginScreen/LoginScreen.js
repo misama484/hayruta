@@ -3,9 +3,7 @@ import { Image, Text, TextInput, TouchableOpacity, View, StyleSheet, Alert, Touc
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 //FIREEBASE
-import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
-import { initializeApp } from 'firebase/app';
-import { firebaseConfig } from '../../firebase/config.js';
+import { signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import { collection, getDocs, getFirestore, query, where } from "firebase/firestore";
 
 import { app, auth } from '../../firebase/config.js';
@@ -68,7 +66,7 @@ export default function LoginScreen({ navigation }) {
     })
   };
 
-  //FUNCION BOTON RESET PASSWORD, solicita a firebase que envie el correo de reset de contrasenya
+  //FUNCION BOTON RESET PASSWORD, solicita a firebase que envie el correo de reset de contraseña
   const onResetPasswordPress = async () => {
     try{
       await sendPasswordResetEmail(auth, email);
@@ -138,9 +136,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: '#fff',
-  },
-  title: {
-  
   },
   logo: {
     height: 100,
