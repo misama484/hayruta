@@ -91,7 +91,7 @@ export default function HomeScreen({route, navigation}) {
  //FUNCION PARA AÑADIR USUARIO A LA RUTA
 
   const addDocUsers = async (fecha, usuario) => {
-    //const fecha1 = fecha.currentDay;
+    const fecha1 = fecha.currentDay;
     if(currentDay === ""){
       console.log(currentDay)
       Alert.alert("Atencion", "No hay fecha seleccionada");
@@ -107,7 +107,6 @@ export default function HomeScreen({route, navigation}) {
     //si los datos existen, los guardamos en las variables
     if (docSnap.exists()) {
       Usuarios = docSnap.data().Usuarios;
-      //Coches = docSnap.data().Coches;
     }
     //COMPROBAR QUE EL NOMBRE NO EXISTE EN BD
     if(Usuarios.includes(usuario)){
@@ -263,7 +262,7 @@ export default function HomeScreen({route, navigation}) {
   }
 
   //FUNCION PARA ELIMINAR USUARIO DE LA RUTA
-  const deleteUser = async (nombre) => {
+  const deleteUser = async (usuario) => {
     //obtenemos el documento correspondiente a la fecha seleccionada, comprobamos que hay una fecha seleccionada
     if(currentDay){
       const ruta = collection(db, 'Ruta');
@@ -277,31 +276,31 @@ export default function HomeScreen({route, navigation}) {
         Coches = docSnap.data().Coches;
       }
       //comprobamos si el usuario esta en la lista
-      if(Usuarios.includes(nombre)){
+      if(Usuarios.includes(usuario)){
         //eliminamos el usuario de la lista
-        const index = Usuarios.indexOf(nombre);
+        const index = Usuarios.indexOf(usuario);
         Usuarios.splice(index, 1);
         //actualizamos la bd
         await setDoc(docRef, {
           Usuarios: Usuarios,
           Coches: Coches
         }, {merge: true});
-        Alert.alert("Usuario eliminado", nombre);
+        Alert.alert("Usuario eliminado", usuario);
       }
       else{
         Alert.alert("Atencion", "El usuario no esta en la lista");
       }
       //comprobamos si el conductor esta en la lista
-      if(Coches.includes(nombre)){
+      if(Coches.includes(usuario)){
         //eliminamos el usuario de la lista
-        const index = Coches.indexOf(nombre);
+        const index = Coches.indexOf(usuario);
         Coches.splice(index, 1);
         //actualizamos la bd
         await setDoc(docRef, {
           Usuarios: Usuarios,
           Coches: Coches
         }, {merge: true});
-        Alert.alert("Conductor eliminado", nombre);
+        Alert.alert("Conductor eliminado", usuario);
       }
       else{
         Alert.alert("Atencion", "El conductor no esta en la lista");
@@ -381,7 +380,7 @@ export default function HomeScreen({route, navigation}) {
             mode='contained'
             style = {{backgroundColor: '#6495ED'}}
             onPress={() => {
-              deleteUser(nombre)
+              deleteUser(usuario)
             }}          
           >Eliminar Usuario</Button>
         </View>
@@ -506,7 +505,6 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   button: {
-
     backgroundColor: '#6495ED',
     width: 70,
     borderRadius: 20,
@@ -538,6 +536,4 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     elevation: 5,
   },
-
-
 })

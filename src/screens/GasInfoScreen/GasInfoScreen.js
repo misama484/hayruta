@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Touchable, TouchableOpacity, Alert, ScrollView, SafeAreaView, TextInput } from 'react-native';
 import { List, Button, Icon } from 'react-native-paper';
-import MapView from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+
 
 
 const GasInfoScreen = () => {
@@ -29,29 +28,23 @@ const GasInfoScreen = () => {
   const fetchGas = () => {
     fetch(`https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/FiltroMunicipio/${idMunicipio}`)
     .then(response => response.json())
-    .then(gasolinera => setGasolineras(gasolinera.ListaEESSPrecio));
-    
+    .then(gasolinera => setGasolineras(gasolinera.ListaEESSPrecio))
     };
 
   const fetchProvincias = () => {
     fetch(provinciasApi)
     .then(response => response.json())
     .then(provincia => setProvincias(provincia));
-  
-
   };
 
-  const fetchPoblaciones = (idProvincia) => {
-   
+  const fetchPoblaciones = (idProvincia) => {   
     fetch(`https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/Listados/MunicipiosPorProvincia/${idProvincia}`)
     .then(response => response.json())
-    .then(poblacion => setPoblaciones(poblacion));
- 
+    .then(poblacion => setPoblaciones(poblacion)); 
   };
   
   useEffect(() => {
-    fetchProvincias();
-    
+    fetchProvincias();    
   }, []);
 
   useEffect(() => {
@@ -59,8 +52,7 @@ const GasInfoScreen = () => {
   }, [idProvincia])
 
   useEffect(() => {
-    fetchGas(idMunicipio);
-    
+    fetchGas(idMunicipio);   
   
   }, [idMunicipio])
  
@@ -261,7 +253,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'darkred',
     marginLeft: 30,
     marginRight: 30,
-    //marginTop: 20,
     height: 40,
     width: 100,
     borderRadius: 5,
@@ -280,30 +271,6 @@ const styles = StyleSheet.create({
 export default GasInfoScreen;
 
 
-//TODO:
-// 1. Hacer que el boton de seleccionar provincia y poblacion se vea bien
-// 2. Hacer que al seleccionar una provincia se muestren las poblaciones de esa provincia
-// 3. Hacer que al seleccionar una poblacion se muestren las gasolineras de esa poblacion
-// 4. Hacer que al seleccionar una gasolinera se muestren los precios de los carburantes de esa gasolinera
-// 5. Hacer que al seleccionar un carburante se muestre el precio de ese carburante en esa gasolinera
-
 
 //ENDPOINTS DE LA API
 //https://sedeaplicaciones.minetur.gob.es/ServiciosRestCarburantes/PreciosCarburantes/help
-
-{/* codigo guardado
-
-<FlatList
-              data = {provincias}
-              
-              renderItem = {({item}) => (
-                <TouchableOpacity
-                  onPress={() => Alert.alert( "Pulsado")}>
-                  <Text>
-                    {item.Provincia}
-                  </Text>
-                </TouchableOpacity>
-              )}
-              keyExtractor = {item => item.IDPovincia.toString()}
-              />
-*/}

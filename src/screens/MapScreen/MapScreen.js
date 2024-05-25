@@ -14,8 +14,6 @@ const MapScreen = ({route}) => {
   const longitud = gasolinera["Longitud (WGS84)"].replace(",", ".");
   const rotulo = gasolinera["Rótulo"];
 
-
-  //coordenadas de origen que se mostraran al abrir el mapa (coordenadas de la base)
   
   const [origin, setOrigin] = useState({
     latitude: parseFloat(latitud), 
@@ -27,12 +25,11 @@ const MapScreen = ({route}) => {
   });
 
 
-//OBTIENE LAS COORDENADAS DE LA UBICACION ACTUAL DEL USUARIO(en caso del emulador, estan introducidas manualmente en la configuracion del emulador con la ubicacion de FloridaUniversitaria)
+//OBTIENE LAS COORDENADAS DE LA UBICACION ACTUAL DEL USUARIO(en caso del emulador, estan introducidas manualmente en la configuracion del emulador con la ubicacion de FloridaUniversitaria, de lo contrario, muestra las oficinas de Google )
  useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-  
+      if (status !== 'granted') {  
         return;
       }
   
@@ -56,11 +53,13 @@ const MapScreen = ({route}) => {
         <Text>Nombre: {rotulo}</Text>
         <Text>GasoleoA: {gasolinera["Precio Gasoleo A"]} Euros</Text>
         <Text>Gasolina 95: {gasolinera["Precio Gasolina 95 E5"]} Euros</Text>
-        {/*en el onPress, abre la app maps y pone como destino las coordenadas de la gasolinera, en este caso Marines */}
         <Button
           mode="contained"
           onPress={() => {
-            const url = `http://maps.google.com/maps?saddr=${origin.latitude},${origin.longitude}&daddr=${destination.latitude},${destination.longitude}`;
+            const url = Platform.select({
+              ios: `maps://maps.apple.com/?saddr=${origin.latitude},${origin.longitude}&daddr=${destination.latitude},${destination.longitude}`,
+              android: `geo:${origin.latitude},${origin.longitude}?q=${destination.latitude},${destination.longitude}`
+            });
             Linking.openURL(url);
           }}
         
@@ -77,7 +76,7 @@ const MapScreen = ({route}) => {
           longitudeDelta: 0.0421,
         }}>
         <Marker 
-          draggable ={true}  //para que se pueda arrastrar
+          //draggable ={true}  //para que se pueda arrastrar
           onDragEnd={(e) => setOrigin(e.nativeEvent.coordinate)} //para que se actualice la posicion al soltar el marker
           coordinate={origin}
           title={"Marines"}

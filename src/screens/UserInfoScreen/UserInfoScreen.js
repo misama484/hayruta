@@ -96,6 +96,35 @@ const UserInfoScreen = ({route}) => {
     const monthName = format(date, 'MMMM');
     setMesNumber(month);
     setMes(arrayMeses[month - 1])  
+
+    const fetchDays = async () => {
+      const results = await getDays(nombre);
+      setData(results);
+    };
+    const fetchCars = async () => {
+      const coches = await getCars(nombre);
+      setCars(coches);
+    }
+    const fetchUsers = async () => {
+      const results = await getUsers();
+      setUsers(results);
+    }
+    const fetchMonthDays = async () => {
+      
+      const results = await getMonthDays(nombre, mesNumber);
+      setUsoMesRuta(results);
+    }
+    const fetchMonthDaysCar = async () => {
+      
+      const results = await getMonthDaysCar(nombre, mesNumber);
+      setUsoMesRutaCoche(results);
+    }
+
+    fetchDays();
+    fetchCars();
+    fetchUsers();
+    fetchMonthDays();
+    fetchMonthDaysCar();
   }, []);
 
   const fetchName = async (email) => {
@@ -109,12 +138,11 @@ const UserInfoScreen = ({route}) => {
     fetchName(email);
   }, [isUserDataUpdated]);
 
-  //Llama a getName y getUsers para obtener los datos de usuario y la lista de usuarios cada vez que cambien deade EditUserInfo
+  //Llama a getName y getUsers para obtener los datos de usuario y la lista de usuarios cada vez que cambien desde EditUserInfo
   useEffect(() => {
     const fetchUserData = async () => {
       const name = await getName(email);
       const users = await getUsers();
-      //setUserData({name, users});
     }
     fetchUserData();
   }, [isUserDataUpdated]);
@@ -390,9 +418,7 @@ const UserInfoScreen = ({route}) => {
 styles = StyleSheet.create({
   container: {
     flex: 1,
-    //justifyContent: 'center',
     alignItems: 'center',
-    //backgroundColor: '#6495ED',
   },
 
   headerContainer: {
@@ -430,7 +456,6 @@ styles = StyleSheet.create({
   },
 
   modalContainer: {
-    //marginTop: 90,
     width: "90%",
     height: "70%",
     alignItems: 'center',
@@ -444,7 +469,6 @@ styles = StyleSheet.create({
   },
 
   input: {
-    //flex: 1,
     height: 40,
     width: 300,
     borderRadius: 5,
@@ -469,7 +493,6 @@ styles = StyleSheet.create({
     marginLeft: 30,
     marginRight: 30,
     marginTop: 20,
-    //height: 48,
     width: 100,
     borderRadius: 20,
     borderWidth: 1, 

@@ -4,8 +4,6 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 //FIREBASE  
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { initializeApp } from 'firebase/app';
-import { firebaseConfig } from '../../firebase/config.js';
 import { getFirestore, doc, setDoc, collection, addDoc, getDocs } from 'firebase/firestore';
 
 import { app, auth } from '../../firebase/config.js';
@@ -23,9 +21,7 @@ export default function RegistrationScreen({ navigation }) {
   const onFooterLinkPress = () => {
     navigation.navigate('Login')
   }
-  
-  //const app = initializeApp(firebaseConfig);
-  //const auth = getAuth(app);
+
   const db = getFirestore(app);
 
   //enviamos datos a bd para almacenar nuevo usuario
@@ -57,8 +53,7 @@ export default function RegistrationScreen({ navigation }) {
       Alert.alert("Error", "Email no valido o contraseñas no coinciden");
       return; 
     }
-    //colocar aqui la validacion de username,para que no cree la cuenta
-    //MODIFICAR LAS REGLAS DE FIREBVASE PARA QUE DEJE LEER LA TABLA USERS SIN ESTAR LOGUEADO, SOLO LECTURA
+
     checkUserName(userName);
     createUserWithEmailAndPassword(auth, email, password, apellido, nombre, userName, poblacion)
     .then(() => {
@@ -147,7 +142,6 @@ export default function RegistrationScreen({ navigation }) {
             placeholder="Email"
             placeholderTextColor="#aaa"
             onChangeText={(text) => formatEmail(text)}
-            //onBlur={(text) => formatEmail(email)}
             value={email}
             underlineColorAndroid="transparent"
             autoCapitalize="none"
@@ -213,8 +207,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginRight: '5%',
     marginLeft: '5%',
-    paddingLeft: 16,
-    
+    paddingLeft: 16,    
   },
   button: {
     backgroundColor: '#788eec',
